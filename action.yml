@@ -1,11 +1,10 @@
-name: 'Your name here'
-description: 'Provide a description here'
-author: 'Your name or organization here'
+name: 'dio-release'
+description: 'For release cfug/dio'
+author: 'CaiJingLong'
 inputs:
-  milliseconds: # change this
+  github-token:
+    description: 'The GitHub token to use for the action'
     required: true
-    description: 'input description here'
-    default: 'default value if applicable'
 runs:
   using: 'node16'
   main: 'dist/index.js'
