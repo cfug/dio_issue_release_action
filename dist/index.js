@@ -43,7 +43,6 @@ exports.check = void 0;
 const core = __importStar(__nccwpck_require__(1350));
 const github_1 = __nccwpck_require__(2080);
 const client_1 = __nccwpck_require__(2009);
-// import {checkPermission} from 'actions-util'
 function check(onSuccesss) {
     var _a, _b, _c;
     return __awaiter(this, void 0, void 0, function* () {
@@ -78,12 +77,11 @@ function check(onSuccesss) {
         }
         core.info(`Comment username: ${commentUsername}`);
         core.info(`Owner: ${owner}, Repo: ${repo}, Issue number: ${issueNumber}`);
-        core.info(`Comment body: ${comment.body}`);
         // Check the comment is from a collaborator
         if (!(yield checkWriterPermission(owner, repo, commentUsername))) {
             return;
         }
-        onSuccesss();
+        onSuccesss(`${comment.body}`.trim());
     });
 }
 exports.check = check;
@@ -106,6 +104,10 @@ function checkWriterPermission(owner, repo, commentUsername) {
             return false;
         }
         core.info(`Permission: ${permission}`);
+        if (permission !== 'write' && permission !== 'admin') {
+            core.info('Permission is not write or admin, exiting');
+            return false;
+        }
         return true;
     });
 }
@@ -137,13 +139,51 @@ exports.client = client;
 /***/ }),
 
 /***/ 6010:
-/***/ ((__unused_webpack_module, exports) => {
+/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
 "use strict";
 
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.releasePkg = void 0;
-function releasePkg() { }
+const core = __importStar(__nccwpck_require__(1350));
+function releasePkg(commentBody) {
+    core.info(`Comment body: ${commentBody}`);
+    // check regex <pkg_name>: v<version>
+    const regex = /(.*):\s*v(.*)/g;
+    const match = commentBody.match(regex);
+    if (match) {
+        const pkgName = match[1];
+        const pkgVersion = match[2];
+        core.info(`Package name: ${pkgName}`);
+        core.info(`Package version: ${pkgVersion}`);
+    }
+    else {
+        core.info(`Not supporte, the publish command should be in the format of <pkg_name>: v<version>`);
+    }
+}
 exports.releasePkg = releasePkg;
 
 

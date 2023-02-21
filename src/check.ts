@@ -48,7 +48,7 @@ export async function check(
     return
   }
 
-  onSuccesss(`${comment.body}`)
+  onSuccesss(`${comment.body}`.trim())
 }
 
 async function checkWriterPermission(
