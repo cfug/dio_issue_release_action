@@ -7,6 +7,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: 'Issue Comment Actions'
-        uses: caijinglong/dio_issue_release_action
+        uses: CaiJingLong/dio_issue_release_action@main
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
