@@ -41,4 +41,4 @@ jobs:
         run: pnpm install
 
       - name: Build and Package
-        run: pnpm run pkg
+        run: pnpm run dist
