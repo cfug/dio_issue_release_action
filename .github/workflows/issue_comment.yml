@@ -1,0 +1,12 @@
+name: 'Issue Comment Actions'
+on:
+  issue_comment:
+    types: [created, edited]
+jobs:
+  issue_comment:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 'Issue Comment Actions'
+        uses: caijinglong/dio_issue_release_action
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}

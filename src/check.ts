@@ -40,6 +40,8 @@ export async function check(onSuccesss: () => void): Promise<void> {
   }
 
   core.info(`Comment username: ${commentUsername}`)
+  core.info(`Owner: ${owner}, Repo: ${repo}, Issue number: ${issueNumber}`)
+  core.info(`Comment body: ${comment.body}`)
 
   // Check the comment is from a collaborator
   if (!(await checkWriterPermission(owner, repo, commentUsername))) {
