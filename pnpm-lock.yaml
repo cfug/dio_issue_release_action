@@ -8,7 +8,6 @@ specifiers:
   '@types/node': ^18.14.0
   '@typescript-eslint/parser': ^4.33.0
   '@vercel/ncc': ^0.31.1
-  actions-util: ^1.1.4
   eslint: ^7.32.0
   eslint-plugin-github: ^4.6.1
   eslint-plugin-jest: ^25.7.0
@@ -23,7 +22,6 @@ dependencies:
   '@actions/github': registry.npmmirror.com/@actions/github/5.1.1
   '@octokit/core': registry.npmmirror.com/@octokit/core/4.2.0
   '@octokit/rest': registry.npmmirror.com/@octokit/rest/19.0.7
-  actions-util: registry.npmmirror.com/actions-util/1.1.4
 
 devDependencies:
   '@types/node': registry.npmmirror.com/@types/node/18.14.0
@@ -456,6 +454,7 @@ packages:
     engines: {node: '>=6.9.0'}
     dependencies:
       regenerator-runtime: registry.npmmirror.com/regenerator-runtime/0.13.11
+    dev: true
 
   registry.npmmirror.com/@babel/template/7.20.7:
     resolution: {integrity: sha512-8SegXApWe6VoNw0r9JHpSteLKTpTiLZ4rMlGIm9JQ18KiCtyQiAMEazujAHrUS5flrcqYZa75ukev3P6QmUwUw==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/@babel/template/-/template-7.20.7.tgz}
@@ -1548,14 +1547,6 @@ packages:
     engines: {node: '>=0.4.0'}
     hasBin: true
     dev: true
-
-  registry.npmmirror.com/actions-util/1.1.4:
-    resolution: {integrity: sha512-B760NAR8J07C+Daa5ErOYTS69TbTiHQFJtp4nluw8M07Lb3vOmdB6jLbYyiCBMhIwh3JmBDRuleCnxwuPK86dA==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/actions-util/-/actions-util-1.1.4.tgz}
-    name: actions-util
-    version: 1.1.4
-    dependencies:
-      '@babel/runtime': registry.npmmirror.com/@babel/runtime/7.21.0
-    dev: false
 
   registry.npmmirror.com/agent-base/6.0.2:
     resolution: {integrity: sha512-RZNwNclF7+MS/8bDg70amg32dyeZGZxiDuQmZxKLAlQjr3jGyLx+4Kkk58UO7D2QdgFIQCovuSuZESne6RG6XQ==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/agent-base/-/agent-base-6.0.2.tgz}
@@ -4926,6 +4917,7 @@ packages:
     resolution: {integrity: sha512-kY1AZVr2Ra+t+piVaJ4gxaFaReZVH40AKNo7UCX6W+dEwBo/2oZJzqfuN1qLq1oL45o56cPaTXELwrTh8Fpggg==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/regenerator-runtime/-/regenerator-runtime-0.13.11.tgz}
     name: regenerator-runtime
     version: 0.13.11
+    dev: true
 
   registry.npmmirror.com/regexp.prototype.flags/1.4.3:
     resolution: {integrity: sha512-fjggEOO3slI6Wvgjwflkc4NFRCTZAu5CnNfBd5qOMYhWdn67nJBBu34/TkD++eeFmd8C9r9jfXJ27+nSiRkSUA==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/regexp.prototype.flags/-/regexp.prototype.flags-1.4.3.tgz}

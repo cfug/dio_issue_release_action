@@ -1,9 +1,10 @@
 import * as core from '@actions/core'
 import {context} from '@actions/github'
 import {client} from './client'
-// import {checkPermission} from 'actions-util'
 
-export async function check(onSuccesss: () => void): Promise<void> {
+export async function check(
+  onSuccesss: (commentBody: string) => void
+): Promise<void> {
   // If the event is not issue_comment, exit
   if (context.eventName !== 'issue_comment') {
     core.info('Event is not issue_comment, exiting')
@@ -41,13 +42,13 @@ export async function check(onSuccesss: () => void): Promise<void> {
 
   core.info(`Comment username: ${commentUsername}`)
   core.info(`Owner: ${owner}, Repo: ${repo}, Issue number: ${issueNumber}`)
-  core.info(`Comment body: ${comment.body}`)
 
   // Check the comment is from a collaborator
   if (!(await checkWriterPermission(owner, repo, commentUsername))) {
     return
   }
-  onSuccesss()
+
+  onSuccesss(`${comment.body}`)
 }
 
 async function checkWriterPermission(
@@ -76,6 +77,11 @@ async function checkWriterPermission(
   }
 
   core.info(`Permission: ${permission}`)
+
+  if (permission !== 'write' && permission !== 'admin') {
+    core.info('Permission is not write or admin, exiting')
+    return false
+  }
 
   return true
 }
