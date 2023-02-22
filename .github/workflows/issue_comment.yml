@@ -10,3 +10,4 @@ jobs:
         uses: CaiJingLong/dio_issue_release_action@main
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
+          pub-credentials-json: ${{ secrets.PUB_CREDENTIALS_JSON }}
