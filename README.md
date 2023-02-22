@@ -15,7 +15,7 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
       - uses: dart-lang/setup-dart@v1.3
       - name: auto release with comment
-        uses: CaiJingLong/dio_issue_release_action@main # 因为不具备普适性，所以不会发布到 github action market，直接使用 @main 的方式引用
+        uses: cfug/dio_issue_release_action@main # 因为不具备普适性，所以不会发布到 github action market，直接使用 @main 的方式引用
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           pub-credentials-json: ${{ secrets.PUB_CREDENTIALS_JSON }}
