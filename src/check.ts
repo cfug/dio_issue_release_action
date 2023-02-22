@@ -1,6 +1,6 @@
 import * as core from '@actions/core'
 import {context} from '@actions/github'
-import {client} from './util'
+import {checkShellEnv, client} from './util'
 
 export async function check(
   onSuccesss: (commentBody: string) => void
@@ -10,6 +10,8 @@ export async function check(
     core.info('Event is not issue_comment, exiting')
     return
   }
+
+  checkShellEnv()
 
   // Get the issue comment body
   const comment = context.payload?.comment

@@ -1,9 +1,9 @@
 import * as core from '@actions/core'
 import * as semver from 'semver'
 import fs from 'fs'
-import {commitAndTag, releaseGithubVersion} from './util'
+import {commitAndTag, publishToDev, releaseGithubVersion} from './util'
 
-interface Pkg {
+export interface Pkg {
   name: string
   version: string
   subpath: string
@@ -34,6 +34,8 @@ export function handleComment(commentBody: string): void {
   commitAndTag(`commit by comment ${commentBody}`, tag)
 
   releaseGithubVersion(tag, currentVersionChangelog)
+
+  publishToDev(pkg)
 }
 
 const _packagesMapping: {
