@@ -1,6 +1,6 @@
 import * as core from '@actions/core'
 import {context} from '@actions/github'
-import {client} from './client'
+import {client} from './util'
 
 export async function check(
   onSuccesss: (commentBody: string) => void

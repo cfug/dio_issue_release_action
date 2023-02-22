@@ -42,7 +42,7 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.check = void 0;
 const core = __importStar(__nccwpck_require__(1350));
 const github_1 = __nccwpck_require__(2080);
-const client_1 = __nccwpck_require__(2009);
+const util_1 = __nccwpck_require__(9520);
 function check(onSuccesss) {
     var _a, _b, _c;
     return __awaiter(this, void 0, void 0, function* () {
@@ -88,7 +88,7 @@ exports.check = check;
 function checkWriterPermission(owner, repo, commentUsername) {
     return __awaiter(this, void 0, void 0, function* () {
         // Check commit user have write access
-        const kit = (0, client_1.client)();
+        const kit = (0, util_1.client)();
         const permissionLevel = yield kit.repos.getCollaboratorPermissionLevel({
             owner,
             repo,
@@ -115,30 +115,7 @@ function checkWriterPermission(owner, repo, commentUsername) {
 
 /***/ }),
 
-/***/ 2009:
-/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.client = void 0;
-const core_1 = __nccwpck_require__(1350);
-const rest_1 = __nccwpck_require__(4563);
-function client() {
-    // Get the GitHub token from the environment
-    const token = (0, core_1.getInput)('github-token');
-    if (!token) {
-        throw new Error('No token found, please set github-token input.');
-    }
-    const octokit = new rest_1.Octokit({ auth: `token ${token}` });
-    return octokit;
-}
-exports.client = client;
-
-
-/***/ }),
-
-/***/ 6010:
+/***/ 7599:
 /***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
 "use strict";
@@ -167,9 +144,9 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.releasePkg = void 0;
+exports.handleComment = void 0;
 const core = __importStar(__nccwpck_require__(1350));
-function releasePkg(commentBody) {
+function handleComment(commentBody) {
     core.info(`Comment body: ${commentBody}`);
     // check regex <pkg_name>: v<version>
     const regex = /(.*):\s*v(.*)/g;
@@ -184,7 +161,7 @@ function releasePkg(commentBody) {
         core.info(`Not supporte, the publish command should be in the format of <pkg_name>: v<version>`);
     }
 }
-exports.releasePkg = releasePkg;
+exports.handleComment = handleComment;
 
 
 /***/ }),
@@ -229,11 +206,11 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 const core = __importStar(__nccwpck_require__(1350));
 const check_1 = __nccwpck_require__(7972);
-const handle_release_1 = __nccwpck_require__(6010);
+const handle_comment_1 = __nccwpck_require__(7599);
 function run() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
-            yield (0, check_1.check)(handle_release_1.releasePkg);
+            yield (0, check_1.check)(handle_comment_1.handleComment);
         }
         catch (error) {
             if (error instanceof Error)
@@ -242,6 +219,29 @@ function run() {
     });
 }
 run();
+
+
+/***/ }),
+
+/***/ 9520:
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.client = void 0;
+const core_1 = __nccwpck_require__(1350);
+const rest_1 = __nccwpck_require__(4563);
+function client() {
+    // Get the GitHub token from the environment
+    const token = (0, core_1.getInput)('github-token');
+    if (!token) {
+        throw new Error('No token found, please set github-token input.');
+    }
+    const octokit = new rest_1.Octokit({ auth: `token ${token}` });
+    return octokit;
+}
+exports.client = client;
 
 
 /***/ }),
