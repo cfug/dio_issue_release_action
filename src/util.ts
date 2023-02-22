@@ -77,7 +77,7 @@ export async function releaseGithubVersion(
   info(`Release success: open ${release.data.html_url} to see it`)
 }
 
-export function publishToDev(pkg: Pkg): void {
+export function publishToPub(pkg: Pkg): void {
   const credentialsJson = getInput('pub-credentials-json')
 
   if (!credentialsJson) {

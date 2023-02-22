@@ -51,6 +51,7 @@ function check(onSuccesss) {
             core.info('Event is not issue_comment, exiting');
             return;
         }
+        (0, util_1.checkShellEnv)();
         // Get the issue comment body
         const comment = (_a = github_1.context.payload) === null || _a === void 0 ? void 0 : _a.comment;
         if (!comment) {
@@ -170,6 +171,7 @@ function handleComment(commentBody) {
     const tag = `${pkg.name}-v${pkg.version}`;
     (0, util_1.commitAndTag)(`commit by comment ${commentBody}`, tag);
     (0, util_1.releaseGithubVersion)(tag, currentVersionChangelog);
+    (0, util_1.publishToPub)(pkg);
 }
 exports.handleComment = handleComment;
 const _packagesMapping = {
@@ -366,7 +368,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.releaseGithubVersion = exports.commitAndTag = exports.client = void 0;
+exports.publishToPub = exports.releaseGithubVersion = exports.commitAndTag = exports.checkShellEnv = exports.client = void 0;
 const core_1 = __nccwpck_require__(1350);
 const github_1 = __nccwpck_require__(2080);
 const rest_1 = __nccwpck_require__(4563);
@@ -381,11 +383,18 @@ function client() {
     return octokit;
 }
 exports.client = client;
-function commitAndTag(message, tag) {
+function checkShellEnv() {
     const checkGit = shelljs_1.default.which('git');
     if (!checkGit) {
         throw new Error('Git is not installed');
     }
+    const checkDart = shelljs_1.default.which('dart');
+    if (!checkDart) {
+        throw new Error('Dart is not installed');
+    }
+}
+exports.checkShellEnv = checkShellEnv;
+function commitAndTag(message, tag) {
     commit(message);
     tagAndPush(tag);
 }
@@ -406,9 +415,7 @@ function tagAndPush(tag) {
 git push origin --tags
 `;
     const result = shelljs_1.default.exec(command);
-    if (result.code !== 0) {
-        throw new Error(`Tag and push failed: ${result.stderr}`);
-    }
+    throwShellError(result);
 }
 function releaseGithubVersion(changelog, tagName) {
     return __awaiter(this, void 0, void 0, function* () {
@@ -428,6 +435,32 @@ function releaseGithubVersion(changelog, tagName) {
     });
 }
 exports.releaseGithubVersion = releaseGithubVersion;
+function publishToPub(pkg) {
+    const credentialsJson = (0, core_1.getInput)('pub-credentials-json');
+    if (!credentialsJson) {
+        throw new Error('No credentials found, please set pub-credentials-json input.');
+    }
+    // Write credentials to the pub file
+    if (!shelljs_1.default.test('-d', '~/.pub-cache')) {
+        shelljs_1.default.mkdir('~/.pub-cache');
+    }
+    shelljs_1.default.exec(`echo '${credentialsJson}' > ~/.pub-cache/credentials.json`);
+    const subpath = pkg.subpath;
+    const tryRun = shelljs_1.default.exec(`cd ${subpath} && dart pub publish --dry-run`);
+    throwShellError(tryRun);
+    const command = `cd ${subpath}
+  dart pub publish --server=https://pub.dev --force
+  `;
+    const result = shelljs_1.default.exec(command);
+    throwShellError(result);
+    (0, core_1.info)(`Publish success: open https://pub.dev/packages/${pkg.name}/versions/${pkg.version} to see the version`);
+}
+exports.publishToPub = publishToPub;
+function throwShellError(result) {
+    if (result.code !== 0) {
+        throw new Error(`Shell error: ${result.stderr}`);
+    }
+}
 
 
 /***/ }),

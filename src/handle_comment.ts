@@ -1,7 +1,7 @@
 import * as core from '@actions/core'
 import * as semver from 'semver'
 import fs from 'fs'
-import {commitAndTag, publishToDev, releaseGithubVersion} from './util'
+import {commitAndTag, publishToPub, releaseGithubVersion} from './util'
 
 export interface Pkg {
   name: string
@@ -35,7 +35,7 @@ export function handleComment(commentBody: string): void {
 
   releaseGithubVersion(tag, currentVersionChangelog)
 
-  publishToDev(pkg)
+  publishToPub(pkg)
 }
 
 const _packagesMapping: {
