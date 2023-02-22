@@ -5,6 +5,9 @@ inputs:
   github-token:
     description: 'The GitHub token to use for the action'
     required: true
+  pub-json:
+    description: 'The pub json file path of the package'
+    required: true
 runs:
   using: 'node16'
   main: 'dist/index.js'

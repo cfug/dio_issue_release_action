@@ -1,6 +1,7 @@
 import * as core from '@actions/core'
 import * as semver from 'semver'
 import fs from 'fs'
+import {commitAndTag, releaseGithubVersion} from './util'
 
 interface Pkg {
   name: string
@@ -24,7 +25,15 @@ export function handleComment(commentBody: string): void {
   core.info(`Start handle it`)
 
   updatePubspecVersion(pkg)
-  updateChangeLogAndGet(pkg)
+  const currentVersionChangelog = updateChangeLogAndGet(pkg)
+
+  core.info(`Current version changelog:\n ${currentVersionChangelog}`)
+
+  // TODO: commit and push
+  const tag = `${pkg.name}-v${pkg.version}`
+  commitAndTag(`commit by comment ${commentBody}`, tag)
+
+  releaseGithubVersion(tag, currentVersionChangelog)
 }
 
 const _packagesMapping: {
@@ -96,31 +105,39 @@ export function convertPkg(body: string): Pkg | null {
 
 function updatePubspecVersion(pkg: Pkg): void {
   const pubspecPath = `${pkg.subpath}/pubspec.yaml`
+  core.info(`pubspec file: ${pubspecPath}`)
   // read pubspec.yaml file content
   const content = fs.readFileSync(pubspecPath, {
     encoding: 'utf-8',
     flag: 'r'
   })
 
-  let outputContent = ``
-
   // update version
   const lines = content.split('\n')
+  const newLines = Array<string>()
   for (let line of lines) {
     if (line.startsWith('version:')) {
       line = `version: ${pkg.version}`
     }
-    outputContent += `${line}\n`
+    newLines.push(line)
   }
 
+  core.info(`new version: ${pkg.version}`)
+
   // write pubspec.yaml file content
-  fs.writeFileSync(pubspecPath, outputContent, {encoding: 'utf-8', flag: 'w'})
+  fs.writeFileSync(pubspecPath, newLines.join('\n'), {
+    encoding: 'utf-8',
+    flag: 'w'
+  })
+
+  core.info(`update pubspec.yaml file success`)
 }
 function updateChangeLogAndGet(pkg: Pkg): string {
   const changelogFile = `${pkg.subpath}/CHANGELOG.md`
+  core.info(`change log file: ${changelogFile}`)
   const changelogContent = fs.readFileSync(changelogFile, {
     encoding: 'utf-8',
-    flag: 'w'
+    flag: 'r'
   })
 
   const lines = changelogContent.split('\n')
@@ -143,12 +160,14 @@ function updateChangeLogAndGet(pkg: Pkg): string {
   const newChangelogContent = lines
     .map((v, index) => {
       if (index === startIndex + 1) {
-        return `${v}\n\n- ${pkg.version}`
+        return `${v}\n## ${pkg.version}\n`
       } else {
         return v
       }
     })
     .join('\n')
+
+  // write changelog file content
 
   fs.writeFileSync(changelogFile, newChangelogContent, {
     encoding: 'utf-8',

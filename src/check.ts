@@ -32,8 +32,7 @@ export async function check(
     return
   }
 
-  const owner = context.repo.owner
-  const repo = context.repo.repo
+  const {owner, repo} = context.repo
 
   if (!owner || !repo) {
     core.info('Owner or repo is empty, exiting')

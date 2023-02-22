@@ -1,4 +1,4 @@
-import {convertPkg} from '../src/handle_comment'
+import {convertPkg, handleComment} from '../src/handle_comment'
 import {expect, test} from '@jest/globals'
 
 test('convertPkg', () => {
@@ -9,4 +9,9 @@ test('convertPkg', () => {
   const pkg2 = convertPkg('dio: 1.0.0')
   expect('dio').toBe(pkg2?.name)
   expect('1.0.0').toBe(pkg2?.version)
+})
+
+test('handle_comment', () => {
+  const body = 'dio: v5.0.1'
+  handleComment(body)
 })
