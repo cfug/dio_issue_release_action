@@ -9,7 +9,7 @@ export interface Pkg {
   subpath: string
 }
 
-export function handleComment(commentBody: string): void {
+export async function handleComment(commentBody: string): Promise<void> {
   core.info(`Comment body: ${commentBody}`)
 
   const pkg = convertPkg(commentBody)
@@ -33,7 +33,7 @@ export function handleComment(commentBody: string): void {
   const tag = `${pkg.name}-v${pkg.version}`
   commitAndTag(`commit by comment ${commentBody}`, tag)
 
-  releaseGithubVersion(tag, currentVersionChangelog)
+  await releaseGithubVersion(tag, currentVersionChangelog)
 
   publishToPub(pkg)
 }

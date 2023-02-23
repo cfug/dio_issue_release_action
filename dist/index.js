@@ -81,7 +81,7 @@ function check(onSuccesss) {
         if (!(yield checkWriterPermission(owner, repo, commentUsername))) {
             return;
         }
-        onSuccesss(`${comment.body}`.trim());
+        yield onSuccesss(`${comment.body}`.trim());
     });
 }
 exports.check = check;
@@ -143,6 +143,15 @@ var __importStar = (this && this.__importStar) || function (mod) {
     __setModuleDefault(result, mod);
     return result;
 };
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
@@ -153,25 +162,27 @@ const semver = __importStar(__nccwpck_require__(5723));
 const fs_1 = __importDefault(__nccwpck_require__(7147));
 const util_1 = __nccwpck_require__(8636);
 function handleComment(commentBody) {
-    core.info(`Comment body: ${commentBody}`);
-    const pkg = convertPkg(commentBody);
-    if (!pkg) {
-        core.info('Comment body is not a package, exiting');
-        return;
-    }
-    core.info(`Package info:`);
-    core.info(`  name: ${pkg.name}`);
-    core.info(`  version: ${pkg.version}`);
-    core.info(`  subpath: ${pkg.subpath}`);
-    core.info(`Start handle it`);
-    updatePubspecVersion(pkg);
-    const currentVersionChangelog = updateChangeLogAndGet(pkg);
-    core.info(`Current version changelog:\n ${currentVersionChangelog}`);
-    // TODO: commit and push
-    const tag = `${pkg.name}-v${pkg.version}`;
-    (0, util_1.commitAndTag)(`commit by comment ${commentBody}`, tag);
-    (0, util_1.releaseGithubVersion)(tag, currentVersionChangelog);
-    (0, util_1.publishToPub)(pkg);
+    return __awaiter(this, void 0, void 0, function* () {
+        core.info(`Comment body: ${commentBody}`);
+        const pkg = convertPkg(commentBody);
+        if (!pkg) {
+            core.info('Comment body is not a package, exiting');
+            return;
+        }
+        core.info(`Package info:`);
+        core.info(`  name: ${pkg.name}`);
+        core.info(`  version: ${pkg.version}`);
+        core.info(`  subpath: ${pkg.subpath}`);
+        core.info(`Start handle it`);
+        updatePubspecVersion(pkg);
+        const currentVersionChangelog = updateChangeLogAndGet(pkg);
+        core.info(`Current version changelog:\n ${currentVersionChangelog}`);
+        // TODO: commit and push
+        const tag = `${pkg.name}-v${pkg.version}`;
+        (0, util_1.commitAndTag)(`commit by comment ${commentBody}`, tag);
+        yield (0, util_1.releaseGithubVersion)(tag, currentVersionChangelog);
+        (0, util_1.publishToPub)(pkg);
+    });
 }
 exports.handleComment = handleComment;
 const _packagesMapping = {
@@ -418,15 +429,23 @@ git push origin --tags
     throwShellError(result);
 }
 function releaseGithubVersion(changelog, tagName) {
+    var _a, _b;
     return __awaiter(this, void 0, void 0, function* () {
         const octokit = client();
         const { owner, repo } = github_1.context.repo;
+        const commentUrl = (_b = (_a = github_1.context.payload) === null || _a === void 0 ? void 0 : _a.comment) === null || _b === void 0 ? void 0 : _b.html_url;
+        const releaseBody = `
+  ${changelog}
+  
+  Because of the [comment](${commentUrl}), this release was created by @${github_1.context.actor}.
+  `;
         const release = yield octokit.repos.createRelease({
             owner,
             repo,
             tag_name: tagName,
             name: tagName,
-            body: changelog
+            body: releaseBody,
+            target_commitish: tagName
         });
         if (release.status !== 201) {
             throw new Error(`Release version failed`);
@@ -438,7 +457,7 @@ exports.releaseGithubVersion = releaseGithubVersion;
 function publishToPub(pkg) {
     const credentialsJson = (0, core_1.getInput)('pub-credentials-json', { required: true });
     const dryRunInput = (0, core_1.getInput)('dry-run', {
-        required: false,
+        required: true,
         trimWhitespace: true
     });
     const dryRun = dryRunInput === 'true';

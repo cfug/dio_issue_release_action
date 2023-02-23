@@ -3,7 +3,7 @@ import {context} from '@actions/github'
 import {checkShellEnv, client} from './util'
 
 export async function check(
-  onSuccesss: (commentBody: string) => void
+  onSuccesss: (commentBody: string) => Promise<void>
 ): Promise<void> {
   // If the event is not issue_comment, exit
   if (context.eventName !== 'issue_comment') {
@@ -48,8 +48,7 @@ export async function check(
   if (!(await checkWriterPermission(owner, repo, commentUsername))) {
     return
   }
-
-  onSuccesss(`${comment.body}`.trim())
+  await onSuccesss(`${comment.body}`.trim())
 }
 
 async function checkWriterPermission(

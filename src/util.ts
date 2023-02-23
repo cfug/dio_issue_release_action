@@ -63,12 +63,21 @@ export async function releaseGithubVersion(
   const octokit = client()
   const {owner, repo} = context.repo
 
+  const commentUrl = context.payload?.comment?.html_url
+
+  const releaseBody = `
+  ${changelog}
+  
+  Because of the [comment](${commentUrl}), this release was created by @${context.actor}.
+  `
+
   const release = await octokit.repos.createRelease({
     owner,
     repo,
     tag_name: tagName,
     name: tagName,
-    body: changelog
+    body: releaseBody,
+    target_commitish: tagName
   })
 
   if (release.status !== 201) {
@@ -80,7 +89,7 @@ export async function releaseGithubVersion(
 export function publishToPub(pkg: Pkg): void {
   const credentialsJson = getInput('pub-credentials-json', {required: true})
   const dryRunInput = getInput('dry-run', {
-    required: false,
+    required: true,
     trimWhitespace: true
   })
 
