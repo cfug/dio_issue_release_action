@@ -181,8 +181,8 @@ function handleComment(commentBody) {
         core.info(`Current version changelog:\n ${currentVersionChangelog}`);
         // TODO: commit and push
         const tag = `${pkg.name}-v${pkg.version}`;
-        (0, util_1.commitAndTag)(`commit by comment ${commentBody}`, tag);
-        yield (0, util_1.releaseGithubVersion)(pkg.version, currentVersionChangelog);
+        (0, util_1.commitAndTag)(`commit by comment ${commentBody}`);
+        yield (0, util_1.releaseGithubVersion)(tag, currentVersionChangelog);
         (0, util_1.publishToPub)(pkg);
     });
 }
@@ -413,9 +413,9 @@ function showCurrentBranchName() {
     (0, core_1.info)(`current git ref: ${result.stdout}`);
 }
 exports.showCurrentBranchName = showCurrentBranchName;
-function commitAndTag(message, tag) {
+function commitAndTag(message) {
     commit(message);
-    tagAndPush(tag);
+    tagAndPush();
 }
 exports.commitAndTag = commitAndTag;
 function commit(message) {
@@ -429,15 +429,12 @@ git commit -m "${message}"`;
     }
     return result;
 }
-function tagAndPush(tag) {
-    const command = `git tag -a ${tag} -m "tag by comment"
-git push origin --tags
-git push origin main
-`;
+function tagAndPush() {
+    const command = `git push origin main `;
     const result = shelljs_1.default.exec(command);
     throwShellError(result);
 }
-function releaseGithubVersion(changelog, tagName) {
+function releaseGithubVersion(tagName, changelog) {
     var _a, _b;
     return __awaiter(this, void 0, void 0, function* () {
         const octokit = client();

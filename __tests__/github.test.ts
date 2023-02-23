@@ -10,7 +10,7 @@ test('Test publish release', async () => {
 
   const github = new Octokit({auth: `token ${token}`})
 
-  const tag = 'dio-v5.0.1-dev.2'
+  const tag = 'dio-v5.0.1-dev.4'
 
   const {data, status} = await github.repos.createRelease({
     owner,

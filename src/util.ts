@@ -34,9 +34,9 @@ export function showCurrentBranchName(): void {
   info(`current git ref: ${result.stdout}`)
 }
 
-export function commitAndTag(message: string, tag: string): void {
+export function commitAndTag(message: string): void {
   commit(message)
-  tagAndPush(tag)
+  tagAndPush()
 }
 
 function commit(message: string): shelljs.ShellString {
@@ -53,11 +53,8 @@ git commit -m "${message}"`
 
   return result
 }
-function tagAndPush(tag: string): void {
-  const command = `git tag -a ${tag} -m "tag by comment"
-git push origin --tags
-git push origin main
-`
+function tagAndPush(): void {
+  const command = `git push origin main `
 
   const result = shelljs.exec(command)
 
@@ -65,8 +62,8 @@ git push origin main
 }
 
 export async function releaseGithubVersion(
-  changelog: string,
-  tagName: string
+  tagName: string,
+  changelog: string
 ): Promise<void> {
   const octokit = client()
   const {owner, repo} = context.repo

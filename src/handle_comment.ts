@@ -31,9 +31,9 @@ export async function handleComment(commentBody: string): Promise<void> {
 
   // TODO: commit and push
   const tag = `${pkg.name}-v${pkg.version}`
-  commitAndTag(`commit by comment ${commentBody}`, tag)
+  commitAndTag(`commit by comment ${commentBody}`)
 
-  await releaseGithubVersion(pkg.version, currentVersionChangelog)
+  await releaseGithubVersion(tag, currentVersionChangelog)
 
   publishToPub(pkg)
 }
