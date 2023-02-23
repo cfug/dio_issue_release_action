@@ -182,9 +182,9 @@ function handleComment(commentBody) {
         // TODO: commit and push
         const tag = `${pkg.name}-v${pkg.version}`;
         (0, util_1.commitAndTag)(`commit by comment ${commentBody}`, tag);
-        // wait 3s to wait github sync tag version
+        // wait github sync tag version
         yield (0, util_1.sleep)(3000);
-        yield (0, util_1.releaseGithubVersion)(tag, currentVersionChangelog);
+        yield (0, util_1.releaseGithubVersion)(pkg.version, currentVersionChangelog);
         (0, util_1.publishToPub)(pkg);
     });
 }
@@ -454,6 +454,7 @@ function releaseGithubVersion(changelog, tagName) {
             owner,
             repo,
             tag_name: tagName,
+            name: tagName,
             body: releaseBody,
             target_commitish: tagName
         });
