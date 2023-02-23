@@ -478,7 +478,7 @@ function publishToPub(pkg) {
     const tryRun = shelljs_1.default.exec(`cd ${subpath} && dart pub publish --dry-run`);
     throwShellError(tryRun);
     if (dryRun) {
-        (0, core_1.info)('The dry-run is true, so the publish is skipped');
+        (0, core_1.info)('Because the input "dry-run" is true, so the publish to pub is skipped.');
         return;
     }
     const command = `cd ${subpath}
