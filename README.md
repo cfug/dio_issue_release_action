@@ -23,10 +23,11 @@ jobs:
 
 当前任务内包含检查 git 环境和 dart 环境的步骤，如果通过`which git`, `which dart` 找不到对应的命令，会报错并结束运行。
 
-| 参数                 | 说明                                                                 |
-| -------------------- | -------------------------------------------------------------------- |
-| github-token         | 用于在项目中调取 github api 来检查权限等操作                         |
-| pub-credentials-json | 用于执行 pub publish 的一些操作，需要在 github 项目的 secrets 中设置 |
+| 参数                 | 说明                                                                                 |
+| -------------------- | ------------------------------------------------------------------------------------ |
+| github-token         | 用于在项目中调取 github api 来检查权限等操作                                         |
+| pub-credentials-json | 用于执行 pub publish 的一些操作，需要在 github 项目的 secrets 中设置                 |
+| dry-run              | 是否为 dry-run 模式，如果为 true，则只执行 dry-run， 不发布至 pub.dev， 默认是 false |
 
 ## 其他
 
