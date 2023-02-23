@@ -6,7 +6,7 @@ import {Pkg} from './handle_comment'
 
 export function client(): Octokit {
   // Get the GitHub token from the environment
-  const token = getInput('github-token')
+  const token = getInput('github-token', {required: true})
   if (!token) {
     throw new Error('No token found, please set github-token input.')
   }
@@ -78,7 +78,13 @@ export async function releaseGithubVersion(
 }
 
 export function publishToPub(pkg: Pkg): void {
-  const credentialsJson = getInput('pub-credentials-json')
+  const credentialsJson = getInput('pub-credentials-json', {required: true})
+  const dryRunInput = getInput('dry-run', {
+    required: false,
+    trimWhitespace: true
+  })
+
+  const dryRun = dryRunInput === 'true'
 
   if (!credentialsJson) {
     throw new Error(
@@ -97,6 +103,11 @@ export function publishToPub(pkg: Pkg): void {
   const tryRun = shelljs.exec(`cd ${subpath} && dart pub publish --dry-run`)
 
   throwShellError(tryRun)
+
+  if (dryRun) {
+    info('The dry-run is true, so the publish is skipped')
+    return
+  }
 
   const command = `cd ${subpath}
   dart pub publish --server=https://pub.dev --force

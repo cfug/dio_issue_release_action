@@ -8,6 +8,10 @@ inputs:
   pub-credentials-json:
     description: 'The pub credentials json'
     required: true
+  dry-run:
+    description: 'Default is false, set to true will not publish to pub.dev, just run pub publish --dry-run'
+    required: false
+    default: 'false'
 runs:
   using: 'node16'
   main: 'dist/index.js'
