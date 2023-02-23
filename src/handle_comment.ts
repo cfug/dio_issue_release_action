@@ -66,7 +66,6 @@ function checkName(name: string): boolean {
 export function convertPkg(body: string): Pkg | null {
   const regex = /(.*):\s*v*(.*)/
   const match = body.match(regex)
-  core.info(`groups: ${match?.groups}`)
 
   if (match) {
     const name = match[1]

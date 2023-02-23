@@ -210,7 +210,6 @@ function checkName(name) {
 function convertPkg(body) {
     const regex = /(.*):\s*v*(.*)/;
     const match = body.match(regex);
-    core.info(`groups: ${match === null || match === void 0 ? void 0 : match.groups}`);
     if (match) {
         const name = match[1];
         const version = match[2];
