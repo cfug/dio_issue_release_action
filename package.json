@@ -2,7 +2,7 @@
   "name": "dio_issue_release_action",
   "version": "0.1.0",
   "private": true,
-  "description": "For issue release and publish package",
+  "description": "Add github release when issue closed.",
   "main": "lib/main.js",
   "scripts": {
     "build": "tsc",
@@ -20,9 +20,12 @@
   "keywords": [
     "actions",
     "node",
-    "setup"
+    "setup",
+    "release",
+    "dart",
+    "pub"
   ],
-  "author": "",
+  "author": "CaiJingLong",
   "license": "MIT",
   "dependencies": {
     "@actions/core": "^1.10.0",
