@@ -83,7 +83,6 @@ export async function releaseGithubVersion(
     owner,
     repo,
     tag_name: tagName,
-    name: tagName,
     body: releaseBody,
     target_commitish: 'main'
   })
