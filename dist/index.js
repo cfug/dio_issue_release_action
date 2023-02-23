@@ -182,6 +182,8 @@ function handleComment(commentBody) {
         // TODO: commit and push
         const tag = `${pkg.name}-v${pkg.version}`;
         (0, util_1.commitAndTag)(`commit by comment ${commentBody}`, tag);
+        // wait 3s to wait github sync tag version
+        yield (0, util_1.sleep)(3000);
         yield (0, util_1.releaseGithubVersion)(tag, currentVersionChangelog);
         (0, util_1.publishToPub)(pkg);
     });
@@ -381,7 +383,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.publishToPub = exports.releaseGithubVersion = exports.commitAndTag = exports.showCurrentBranchName = exports.checkShellEnv = exports.client = void 0;
+exports.sleep = exports.publishToPub = exports.releaseGithubVersion = exports.commitAndTag = exports.showCurrentBranchName = exports.checkShellEnv = exports.client = void 0;
 const core_1 = __nccwpck_require__(1680);
 const github_1 = __nccwpck_require__(1240);
 const rest_1 = __nccwpck_require__(3306);
@@ -432,6 +434,7 @@ git commit -m "${message}"`;
 function tagAndPush(tag) {
     const command = `git tag -a ${tag} -m "tag by comment"
 git push origin --tags
+git push origin main
 `;
     const result = shelljs_1.default.exec(command);
     throwShellError(result);
@@ -451,7 +454,6 @@ function releaseGithubVersion(changelog, tagName) {
             owner,
             repo,
             tag_name: tagName,
-            name: tagName,
             body: releaseBody,
             target_commitish: tagName
         });
@@ -497,6 +499,12 @@ function throwShellError(result) {
         throw new Error(`Shell error: ${result.stderr}`);
     }
 }
+function sleep(ms) {
+    return __awaiter(this, void 0, void 0, function* () {
+        return new Promise(resolve => setTimeout(resolve, ms));
+    });
+}
+exports.sleep = sleep;
 
 
 /***/ }),

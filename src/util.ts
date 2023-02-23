@@ -56,6 +56,7 @@ git commit -m "${message}"`
 function tagAndPush(tag: string): void {
   const command = `git tag -a ${tag} -m "tag by comment"
 git push origin --tags
+git push origin main
 `
 
   const result = shelljs.exec(command)
@@ -82,7 +83,6 @@ export async function releaseGithubVersion(
     owner,
     repo,
     tag_name: tagName,
-    name: tagName,
     body: releaseBody,
     target_commitish: tagName
   })
@@ -142,4 +142,8 @@ function throwShellError(result: shelljs.ShellString): void {
   if (result.code !== 0) {
     throw new Error(`Shell error: ${result.stderr}`)
   }
+}
+
+export async function sleep(ms: number): Promise<void> {
+  return new Promise(resolve => setTimeout(resolve, ms))
 }
