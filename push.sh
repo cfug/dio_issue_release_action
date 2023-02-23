@@ -11,7 +11,7 @@ git add .
 
 if [ -z "$_message" ]; then
   echo "Commiting..."
-  change_file_name=$(git diff --name-only HEAD~1 HEAD)
+  change_file_name=$(git diff --name-only HEAD)
   git commit -m "Update in $(date +'%Y-%m-%d %H:%M:%S'), change files: $change_file_name"
 else
   echo "Commiting with message: $_message"
