@@ -182,8 +182,6 @@ function handleComment(commentBody) {
         // TODO: commit and push
         const tag = `${pkg.name}-v${pkg.version}`;
         (0, util_1.commitAndTag)(`commit by comment ${commentBody}`, tag);
-        // wait github sync tag version
-        yield (0, util_1.sleep)(3000);
         yield (0, util_1.releaseGithubVersion)(pkg.version, currentVersionChangelog);
         (0, util_1.publishToPub)(pkg);
     });
@@ -456,7 +454,7 @@ function releaseGithubVersion(changelog, tagName) {
             tag_name: tagName,
             name: tagName,
             body: releaseBody,
-            target_commitish: tagName
+            target_commitish: 'main'
         });
         if (release.status !== 201) {
             throw new Error(`Release version failed`);

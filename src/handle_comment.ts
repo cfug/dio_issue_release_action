@@ -1,7 +1,7 @@
 import * as core from '@actions/core'
 import * as semver from 'semver'
 import fs from 'fs'
-import {commitAndTag, publishToPub, releaseGithubVersion, sleep} from './util'
+import {commitAndTag, publishToPub, releaseGithubVersion} from './util'
 
 export interface Pkg {
   name: string
@@ -32,9 +32,6 @@ export async function handleComment(commentBody: string): Promise<void> {
   // TODO: commit and push
   const tag = `${pkg.name}-v${pkg.version}`
   commitAndTag(`commit by comment ${commentBody}`, tag)
-
-  // wait github sync tag version
-  await sleep(3000)
 
   await releaseGithubVersion(pkg.version, currentVersionChangelog)
 

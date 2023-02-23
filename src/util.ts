@@ -85,7 +85,7 @@ export async function releaseGithubVersion(
     tag_name: tagName,
     name: tagName,
     body: releaseBody,
-    target_commitish: tagName
+    target_commitish: 'main'
   })
 
   if (release.status !== 201) {
