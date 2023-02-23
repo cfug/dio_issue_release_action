@@ -29,8 +29,20 @@ jobs:
 | pub-credentials-json | 用于执行 pub publish 的一些操作，需要在 github 项目的 secrets 中设置                 |
 | dry-run              | 是否为 dry-run 模式，如果为 true，则只执行 dry-run， 不发布至 pub.dev， 默认是 false |
 
-## 其他
+## 权限
 
 action 使用时，如果权限不足，可以修改配置
 
 ![img](assets/1.jpeg)
+
+因为 action 在使用时，涉及到修改项目文件并提交，所以需要有写入的权限。
+
+## 做的事
+
+1. 检查 issue 评论是否有写入权限
+2. 检查评论内容是否为 `dio: v1.0.0` 这样的格式
+3. 是则修改对应包的 pubspec.yaml 文件中的 version 字段
+4. 修改 CHANGELOG.md 文件，并把 unrelease 的内容移动到新的版本中
+5. 执行 git add, git commit, git push
+6. 在 main 分支上打 release tag
+7. 发布到 pub.dev
