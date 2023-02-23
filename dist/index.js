@@ -52,6 +52,8 @@ function check(onSuccesss) {
             return;
         }
         (0, util_1.checkShellEnv)();
+        // show current branch name
+        (0, util_1.showCurrentBranchName)();
         // Get the issue comment body
         const comment = (_a = github_1.context.payload) === null || _a === void 0 ? void 0 : _a.comment;
         if (!comment) {
@@ -379,7 +381,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.publishToPub = exports.releaseGithubVersion = exports.commitAndTag = exports.checkShellEnv = exports.client = void 0;
+exports.publishToPub = exports.releaseGithubVersion = exports.commitAndTag = exports.showCurrentBranchName = exports.checkShellEnv = exports.client = void 0;
 const core_1 = __nccwpck_require__(1680);
 const github_1 = __nccwpck_require__(1240);
 const rest_1 = __nccwpck_require__(3306);
@@ -405,6 +407,12 @@ function checkShellEnv() {
     }
 }
 exports.checkShellEnv = checkShellEnv;
+function showCurrentBranchName() {
+    const result = shelljs_1.default.exec('git rev-parse --abbrev-ref HEAD');
+    throwShellError(result);
+    (0, core_1.info)(`current git ref: ${result.stdout}`);
+}
+exports.showCurrentBranchName = showCurrentBranchName;
 function commitAndTag(message, tag) {
     commit(message);
     tagAndPush(tag);

@@ -27,6 +27,13 @@ export function checkShellEnv(): void {
   }
 }
 
+export function showCurrentBranchName(): void {
+  const result = shelljs.exec('git rev-parse --abbrev-ref HEAD')
+  throwShellError(result)
+
+  info(`current git ref: ${result.stdout}`)
+}
+
 export function commitAndTag(message: string, tag: string): void {
   commit(message)
   tagAndPush(tag)

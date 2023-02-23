@@ -1,6 +1,6 @@
 import * as core from '@actions/core'
 import {context} from '@actions/github'
-import {checkShellEnv, client} from './util'
+import {checkShellEnv, client, showCurrentBranchName} from './util'
 
 export async function check(
   onSuccesss: (commentBody: string) => Promise<void>
@@ -12,6 +12,9 @@ export async function check(
   }
 
   checkShellEnv()
+
+  // show current branch name
+  showCurrentBranchName()
 
   // Get the issue comment body
   const comment = context.payload?.comment
