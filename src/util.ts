@@ -118,7 +118,9 @@ export function publishToPub(pkg: Pkg): void {
   throwShellError(tryRun)
 
   if (dryRun) {
-    info('The dry-run is true, so the publish is skipped')
+    info(
+      'Because the input "dry-run" is true, so the publish to pub is skipped.'
+    )
     return
   }
 
