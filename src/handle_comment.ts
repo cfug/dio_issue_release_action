@@ -31,16 +31,18 @@ export async function handleComment(commentBody: string): Promise<void> {
   core.info(`Current version changelog:\n ${currentVersionChangelog}`)
 
   // TODO: commit and push
-  const tag = `${pkg.name}-v${pkg.version}`
+  const tag = `${pkg.name}_v${pkg.version}`
+  const commitTitle = `🔖 ${pkg.name} v${pkg.version}`
+  const releaseName = `${pkg.name} ${pkg.version}`
 
   const commentUrl = context.payload?.comment?.html_url
 
-  const commitMsg = `[🔖] ${tag}
+  const commitMsg = `${commitTitle}
 Triggered by @${context.actor} on ${commentUrl}`
 
   commitAndTag(commitMsg)
 
-  await releaseGithubVersion(tag, currentVersionChangelog)
+  await releaseGithubVersion(tag, releaseName, currentVersionChangelog)
 
   publishToPub(pkg)
 }

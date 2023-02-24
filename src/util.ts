@@ -63,6 +63,7 @@ function tagAndPush(): void {
 
 export async function releaseGithubVersion(
   tagName: string,
+  releaseName: string,
   changelog: string
 ): Promise<void> {
   const octokit = client()
@@ -77,6 +78,7 @@ export async function releaseGithubVersion(
     owner,
     repo,
     tag_name: tagName,
+    name: releaseName,
     body: releaseBody,
     target_commitish: 'main'
   })

@@ -182,12 +182,14 @@ function handleComment(commentBody) {
         const currentVersionChangelog = updateChangeLogAndGet(pkg);
         core.info(`Current version changelog:\n ${currentVersionChangelog}`);
         // TODO: commit and push
-        const tag = `${pkg.name}-v${pkg.version}`;
+        const tag = `${pkg.name}_v${pkg.version}`;
+        const commitTitle = `🔖 ${pkg.name} v${pkg.version}`;
+        const releaseName = `${pkg.name} ${pkg.version}`;
         const commentUrl = (_b = (_a = github_1.context.payload) === null || _a === void 0 ? void 0 : _a.comment) === null || _b === void 0 ? void 0 : _b.html_url;
-        const commitMsg = `[🔖] ${tag}
+        const commitMsg = `${commitTitle}
 Triggered by @${github_1.context.actor} on ${commentUrl}`;
         (0, util_1.commitAndTag)(commitMsg);
-        yield (0, util_1.releaseGithubVersion)(tag, currentVersionChangelog);
+        yield (0, util_1.releaseGithubVersion)(tag, releaseName, currentVersionChangelog);
         (0, util_1.publishToPub)(pkg);
     });
 }
@@ -438,7 +440,7 @@ function tagAndPush() {
     const result = shelljs_1.default.exec(command);
     throwShellError(result);
 }
-function releaseGithubVersion(tagName, changelog) {
+function releaseGithubVersion(tagName, releaseName, changelog) {
     return __awaiter(this, void 0, void 0, function* () {
         const octokit = client();
         const { owner, repo } = github_1.context.repo;
@@ -450,6 +452,7 @@ function releaseGithubVersion(tagName, changelog) {
             owner,
             repo,
             tag_name: tagName,
+            name: releaseName,
             body: releaseBody,
             target_commitish: 'main'
         });
