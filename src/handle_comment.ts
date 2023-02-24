@@ -2,6 +2,7 @@ import * as core from '@actions/core'
 import * as semver from 'semver'
 import fs from 'fs'
 import {commitAndTag, publishToPub, releaseGithubVersion} from './util'
+import {context} from '@actions/github'
 
 export interface Pkg {
   name: string
@@ -31,7 +32,13 @@ export async function handleComment(commentBody: string): Promise<void> {
 
   // TODO: commit and push
   const tag = `${pkg.name}-v${pkg.version}`
-  commitAndTag(`commit by comment ${commentBody}`)
+
+  const commentUrl = context.payload?.comment?.html_url
+
+  const commitMsg = `[🔖] ${tag}
+Triggered by @${context.actor} on ${commentUrl}`
+
+  commitAndTag(commitMsg)
 
   await releaseGithubVersion(tag, currentVersionChangelog)
 

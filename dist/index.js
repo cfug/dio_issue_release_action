@@ -163,7 +163,9 @@ const core = __importStar(__nccwpck_require__(1680));
 const semver = __importStar(__nccwpck_require__(5723));
 const fs_1 = __importDefault(__nccwpck_require__(7147));
 const util_1 = __nccwpck_require__(8636);
+const github_1 = __nccwpck_require__(1240);
 function handleComment(commentBody) {
+    var _a, _b;
     return __awaiter(this, void 0, void 0, function* () {
         core.info(`Comment body: ${commentBody}`);
         const pkg = convertPkg(commentBody);
@@ -181,7 +183,10 @@ function handleComment(commentBody) {
         core.info(`Current version changelog:\n ${currentVersionChangelog}`);
         // TODO: commit and push
         const tag = `${pkg.name}-v${pkg.version}`;
-        (0, util_1.commitAndTag)(`commit by comment ${commentBody}`);
+        const commentUrl = (_b = (_a = github_1.context.payload) === null || _a === void 0 ? void 0 : _a.comment) === null || _b === void 0 ? void 0 : _b.html_url;
+        const commitMsg = `[🔖] ${tag}
+Triggered by @${github_1.context.actor} on ${commentUrl}`;
+        (0, util_1.commitAndTag)(commitMsg);
         yield (0, util_1.releaseGithubVersion)(tag, currentVersionChangelog);
         (0, util_1.publishToPub)(pkg);
     });
@@ -434,15 +439,12 @@ function tagAndPush() {
     throwShellError(result);
 }
 function releaseGithubVersion(tagName, changelog) {
-    var _a, _b;
     return __awaiter(this, void 0, void 0, function* () {
         const octokit = client();
         const { owner, repo } = github_1.context.repo;
-        const commentUrl = (_b = (_a = github_1.context.payload) === null || _a === void 0 ? void 0 : _a.comment) === null || _b === void 0 ? void 0 : _b.html_url;
         const releaseBody = `
+  ## What's new
   ${changelog}
-  
-  Because of the [comment](${commentUrl}), this release was created by @${github_1.context.actor}.
   `;
         const release = yield octokit.repos.createRelease({
             owner,

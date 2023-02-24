@@ -68,12 +68,9 @@ export async function releaseGithubVersion(
   const octokit = client()
   const {owner, repo} = context.repo
 
-  const commentUrl = context.payload?.comment?.html_url
-
   const releaseBody = `
+  ## What's new
   ${changelog}
-  
-  Because of the [comment](${commentUrl}), this release was created by @${context.actor}.
   `
 
   const release = await octokit.repos.createRelease({
