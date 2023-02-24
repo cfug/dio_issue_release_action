@@ -449,7 +449,19 @@ git commit -m "${message}"`;
     return result;
 }
 function tagAndPush() {
-    const command = `git push origin main `;
+    // config token for push
+    const token = (0, core_1.getInput)('github-token', { required: true });
+    if (!token) {
+        throw new Error('No token found, please set github-token input.');
+    }
+    // use gh to login and push
+    const ghCommand = `echo "${token}" | gh auth login --with-token --hostname github.com -p https
+  gh auth setup-git -h github.com
+  `;
+    const command = `
+${ghCommand}
+git push origin main
+`;
     const result = shelljs_1.default.exec(command);
     throwShellError(result);
 }
