@@ -198,7 +198,7 @@ export function checkVersionContentEmpty(versionContent: string): void {
   }
   if (versionContent.trim() === noneText) {
     throw new Error(
-      `Release version must have changelog info, not "${noneText}`
+      `Release version must have changelog info, not "${noneText}"`
     )
   }
 }

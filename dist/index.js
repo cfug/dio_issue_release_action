@@ -317,7 +317,7 @@ function checkVersionContentEmpty(versionContent) {
         throw new Error('Release version must have changelog info, not empty');
     }
     if (versionContent.trim() === noneText) {
-        throw new Error(`Release version must have changelog info, not "${noneText}`);
+        throw new Error(`Release version must have changelog info, not "${noneText}"`);
     }
 }
 exports.checkVersionContentEmpty = checkVersionContentEmpty;
