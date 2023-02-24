@@ -1,0 +1,13 @@
+name: 'Auto Type Label'
+on:
+  pull_request:
+    types: [opened, edited]
+  issues:
+    types: [opened, edited]
+jobs:
+  auto_type_label:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: auto-type-label
+        uses: flutter-fix-something/auto-label-action@0.0.5
