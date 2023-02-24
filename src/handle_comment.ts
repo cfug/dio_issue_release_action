@@ -56,11 +56,11 @@ const _packagesMapping: {
   native_dio_adapter: 'plugins/native_dio_adapter'
 }
 
-function checkVersion(version: string): boolean {
+export function checkVersion(version: string): boolean {
   return semver.valid(version) != null
 }
 
-function checkName(name: string): boolean {
+export function checkName(name: string): boolean {
   return name in _packagesMapping
 }
 
@@ -142,6 +142,9 @@ function updatePubspecVersion(pkg: Pkg): void {
 
   core.info(`update pubspec.yaml file success`)
 }
+
+const noneText = '*None.*'
+
 function updateChangeLogAndGet(pkg: Pkg): string {
   const changelogFile = `${pkg.subpath}/CHANGELOG.md`
   core.info(`change log file: ${changelogFile}`)
@@ -166,11 +169,13 @@ function updateChangeLogAndGet(pkg: Pkg): string {
 
   const versionContent = lines.slice(startIndex + 1, endIndex).join('\n')
 
+  checkVersionContentEmpty(versionContent)
+
   // update changelog info
   const newChangelogContent = lines
     .map((line, index) => {
       if (index === startIndex + 1) {
-        return `\n*None.*\n${line}\n## ${pkg.version}\n`
+        return `\n${noneText}\n${line}\n## ${pkg.version}\n`
       } else {
         return line
       }
@@ -185,4 +190,13 @@ function updateChangeLogAndGet(pkg: Pkg): string {
   })
 
   return versionContent
+}
+
+export function checkVersionContentEmpty(versionContent: string): void {
+  if (versionContent.trim() === '') {
+    throw new Error('Release version must have changelog info, not empty')
+  }
+  if (versionContent.trim() === noneText) {
+    throw new Error('Release version must have changelog info, not "$noneText"')
+  }
 }

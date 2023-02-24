@@ -158,7 +158,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.convertPkg = exports.handleComment = void 0;
+exports.checkVersionContentEmpty = exports.convertPkg = exports.checkName = exports.checkVersion = exports.handleComment = void 0;
 const core = __importStar(__nccwpck_require__(1680));
 const semver = __importStar(__nccwpck_require__(5723));
 const fs_1 = __importDefault(__nccwpck_require__(7147));
@@ -203,9 +203,11 @@ const _packagesMapping = {
 function checkVersion(version) {
     return semver.valid(version) != null;
 }
+exports.checkVersion = checkVersion;
 function checkName(name) {
     return name in _packagesMapping;
 }
+exports.checkName = checkName;
 /**
  *
  * The body like: `dio: v1.0.0` or `dio: 1.0.0`
@@ -269,6 +271,7 @@ function updatePubspecVersion(pkg) {
     });
     core.info(`update pubspec.yaml file success`);
 }
+const noneText = '*None.*';
 function updateChangeLogAndGet(pkg) {
     const changelogFile = `${pkg.subpath}/CHANGELOG.md`;
     core.info(`change log file: ${changelogFile}`);
@@ -290,11 +293,12 @@ function updateChangeLogAndGet(pkg) {
         }
     }
     const versionContent = lines.slice(startIndex + 1, endIndex).join('\n');
+    checkVersionContentEmpty(versionContent);
     // update changelog info
     const newChangelogContent = lines
         .map((line, index) => {
         if (index === startIndex + 1) {
-            return `\n*None.*\n${line}\n## ${pkg.version}\n`;
+            return `\n${noneText}\n${line}\n## ${pkg.version}\n`;
         }
         else {
             return line;
@@ -308,6 +312,15 @@ function updateChangeLogAndGet(pkg) {
     });
     return versionContent;
 }
+function checkVersionContentEmpty(versionContent) {
+    if (versionContent.trim() === '') {
+        throw new Error('Release version must have changelog info, not empty');
+    }
+    if (versionContent.trim() === noneText) {
+        throw new Error('Release version must have changelog info, not "$noneText"');
+    }
+}
+exports.checkVersionContentEmpty = checkVersionContentEmpty;
 
 
 /***/ }),

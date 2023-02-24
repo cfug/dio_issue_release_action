@@ -1,4 +1,8 @@
-import {convertPkg, handleComment} from '../src/handle_comment'
+import {
+  checkName,
+  checkVersionContentEmpty,
+  convertPkg
+} from '../src/handle_comment'
 import {expect, test} from '@jest/globals'
 
 test('convertPkg', () => {
@@ -9,9 +13,33 @@ test('convertPkg', () => {
   const pkg2 = convertPkg('dio: 1.0.0')
   expect('dio').toBe(pkg2?.name)
   expect('1.0.0').toBe(pkg2?.version)
+
+  expect(convertPkg('unknown: 1.0.0')).toBeNull()
+  expect(convertPkg('dio: ')).toBeNull()
+
+  expect(convertPkg('cookie_manager: 1.0.0')).toEqual({
+    name: 'cookie_manager',
+    version: '1.0.0',
+    subpath: 'plugins/cookie_manager'
+  })
 })
 
-test('handle_comment', () => {
-  const body = 'dio: v5.0.1'
-  handleComment(body)
+test('check_change_log_change', () => {
+  expect(() => checkVersionContentEmpty('*None.*')).toThrowError()
+  expect(() => checkVersionContentEmpty('\n *None.* \n')).toThrowError()
+
+  expect(() => checkVersionContentEmpty('')).toThrowError()
+  expect(() => checkVersionContentEmpty(' ')).toThrowError()
+
+  expect(() =>
+    checkVersionContentEmpty(' - The version have change ')
+  ).not.toThrowError()
+})
+
+test('checkName', () => {
+  expect(checkName('dio')).toBe(true)
+  expect(checkName('cookie_manager')).toBe(true)
+  expect(checkName('http2_adapter')).toBe(true)
+  expect(checkName('native_dio_adapter')).toBe(true)
+  expect(checkName('unknown')).toBe(false)
 })
