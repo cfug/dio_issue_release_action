@@ -170,7 +170,7 @@ function updateChangeLogAndGet(pkg: Pkg): string {
   const newChangelogContent = lines
     .map((line, index) => {
       if (index === startIndex + 1) {
-        return `*None.*\n${line}\n## ${pkg.version}\n`
+        return `\n*None.*\n${line}\n## ${pkg.version}\n`
       } else {
         return line
       }
