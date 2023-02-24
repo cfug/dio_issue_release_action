@@ -292,12 +292,12 @@ function updateChangeLogAndGet(pkg) {
     const versionContent = lines.slice(startIndex + 1, endIndex).join('\n');
     // update changelog info
     const newChangelogContent = lines
-        .map((v, index) => {
+        .map((line, index) => {
         if (index === startIndex + 1) {
-            return `${v}\n## ${pkg.version}\n`;
+            return `*None.*\n${line}\n## ${pkg.version}\n`;
         }
         else {
-            return v;
+            return line;
         }
     })
         .join('\n');
