@@ -464,6 +464,7 @@ git push origin main
 `;
     const result = shelljs_1.default.exec(command);
     throwShellError(result);
+    return result;
 }
 function releaseGithubVersion(tagName, releaseName, changelog) {
     return __awaiter(this, void 0, void 0, function* () {

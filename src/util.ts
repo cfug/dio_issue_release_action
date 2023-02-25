@@ -53,7 +53,7 @@ git commit -m "${message}"`
 
   return result
 }
-function tagAndPush(): void {
+function tagAndPush(): shelljs.ShellString {
   // config token for push
   const token = getInput('github-token', {required: true})
   if (!token) {
@@ -73,6 +73,8 @@ git push origin main
   const result = shelljs.exec(command)
 
   throwShellError(result)
+
+  return result
 }
 
 export async function releaseGithubVersion(
