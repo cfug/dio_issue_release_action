@@ -438,8 +438,8 @@ function commitAndTag(message) {
 }
 exports.commitAndTag = commitAndTag;
 function commit(message) {
-    const command = `git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
-git config --global user.name "github-actions[bot]"
+    const command = `git config --global user.email "47591151+cfug-dev@users.noreply.github.com"
+git config --global user.name "cfug-dev"
 git add .
 git commit -m "${message}"`;
     const result = shelljs_1.default.exec(command);
