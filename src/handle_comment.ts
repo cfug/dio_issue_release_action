@@ -1,7 +1,12 @@
 import * as core from '@actions/core'
 import * as semver from 'semver'
 import fs from 'fs'
-import {commitAndTag, publishToPub, releaseGithubVersion} from './util'
+import {
+  commitAndTag,
+  publishToPub,
+  releaseGithubVersion,
+  tryCheckFlutterEnv
+} from './util'
 import {context} from '@actions/github'
 
 export interface Pkg {
@@ -24,6 +29,8 @@ export async function handleComment(commentBody: string): Promise<void> {
   core.info(`  version: ${pkg.version}`)
   core.info(`  subpath: ${pkg.subpath}`)
   core.info(`Start handle it`)
+
+  tryCheckFlutterEnv(pkg)
 
   updatePubspecVersion(pkg)
   const currentVersionChangelog = updateChangeLogAndGet(pkg)
