@@ -509,6 +509,8 @@ function publishToPub(pkg) {
     const subpath = pkg.subpath;
     const isFlutter = isFlutterPackage(`${subpath}/pubspec.yaml`);
     const publishCommand = isFlutter ? 'flutter pub publish' : 'dart pub publish';
+    (0, core_1.info)(`The ${pkg.name} is a ${isFlutter ? 'flutter' : 'dart'} package`);
+    (0, core_1.info)(`Use ${publishCommand} to publish`);
     const tryRun = shelljs_1.default.exec(`cd ${subpath} && ${publishCommand} --dry-run`);
     throwShellError(tryRun);
     if (dryRun) {

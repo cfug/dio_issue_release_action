@@ -133,6 +133,9 @@ export function publishToPub(pkg: Pkg): void {
 
   const publishCommand = isFlutter ? 'flutter pub publish' : 'dart pub publish'
 
+  info(`The ${pkg.name} is a ${isFlutter ? 'flutter' : 'dart'} package`)
+  info(`Use ${publishCommand} to publish`)
+
   const tryRun = shelljs.exec(`cd ${subpath} && ${publishCommand} --dry-run`)
 
   throwShellError(tryRun)
