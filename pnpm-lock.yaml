@@ -21,6 +21,7 @@ specifiers:
   shelljs: ^0.8.5
   ts-jest: ^29.0.5
   typescript: ^4.9.5
+  yaml: ^2.2.1
 
 dependencies:
   '@actions/core': registry.npmmirror.com/@actions/core/1.10.0
@@ -29,6 +30,7 @@ dependencies:
   '@octokit/rest': registry.npmmirror.com/@octokit/rest/19.0.7
   semver: registry.npmmirror.com/semver/7.3.8
   shelljs: registry.npmmirror.com/shelljs/0.8.5
+  yaml: registry.npmmirror.com/yaml/2.2.1
 
 devDependencies:
   '@jest/globals': registry.npmmirror.com/@jest/globals/29.4.3
@@ -5199,6 +5201,13 @@ packages:
     resolution: {integrity: sha512-3wdGidZyq5PB084XLES5TpOSRA3wjXAlIWMhum2kRcv/41Sn2emQ0dycQW4uZXLejwKvg6EsvbdlVL+FYEct7A==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/yallist/-/yallist-4.0.0.tgz}
     name: yallist
     version: 4.0.0
+
+  registry.npmmirror.com/yaml/2.2.1:
+    resolution: {integrity: sha512-e0WHiYql7+9wr4cWMx3TVQrNwejKaEe7/rHNmQmqRjazfOP5W8PB6Jpebb5o6fIapbz9o9+2ipcaTM2ZwDI6lw==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/yaml/-/yaml-2.2.1.tgz}
+    name: yaml
+    version: 2.2.1
+    engines: {node: '>= 14'}
+    dev: false
 
   registry.npmmirror.com/yargs-parser/21.1.1:
     resolution: {integrity: sha512-tVpsJW7DdjecAiFpbIB1e3qxIQsE6NoPc5/eTdrbbIC4h0LVsWhnoa3g+m2HclBIujHzsxZ4VJVA+GUuc2/LBw==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/yargs-parser/-/yargs-parser-21.1.1.tgz}

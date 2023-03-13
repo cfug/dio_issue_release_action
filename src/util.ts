@@ -3,6 +3,8 @@ import {context} from '@actions/github'
 import {Octokit} from '@octokit/rest'
 import shelljs from 'shelljs'
 import {Pkg} from './handle_comment'
+import fs from 'fs'
+import Yaml from 'yaml'
 
 export function client(): Octokit {
   // Get the GitHub token from the environment
@@ -127,8 +129,11 @@ export function publishToPub(pkg: Pkg): void {
   shelljs.exec(`echo '${credentialsJson}' > ~/.pub-cache/credentials.json`)
 
   const subpath = pkg.subpath
+  const isFlutter = isFlutterPackage(`${subpath}/pubspec.yaml`)
 
-  const tryRun = shelljs.exec(`cd ${subpath} && dart pub publish --dry-run`)
+  const publishCommand = isFlutter ? 'flutter pub publish' : 'dart pub publish'
+
+  const tryRun = shelljs.exec(`cd ${subpath} && ${publishCommand} --dry-run`)
 
   throwShellError(tryRun)
 
@@ -140,7 +145,7 @@ export function publishToPub(pkg: Pkg): void {
   }
 
   const command = `cd ${subpath}
-  dart pub publish --server=https://pub.dev --force
+  ${publishCommand} --server=https://pub.dev --force
   `
 
   const result = shelljs.exec(command)
@@ -160,4 +165,14 @@ function throwShellError(result: shelljs.ShellString): void {
 
 export async function sleep(ms: number): Promise<void> {
   return new Promise(resolve => setTimeout(resolve, ms))
+}
+
+export function isFlutterPackage(filePath: string): boolean {
+  const content = fs.readFileSync(filePath, 'utf8')
+  const yaml = Yaml.parse(content)
+  const environment = yaml.environment
+  if (!environment) {
+    return false
+  }
+  return !!environment.flutter
 }
