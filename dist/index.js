@@ -178,6 +178,7 @@ function handleComment(commentBody) {
         core.info(`  version: ${pkg.version}`);
         core.info(`  subpath: ${pkg.subpath}`);
         core.info(`Start handle it`);
+        (0, util_1.tryCheckFlutterEnv)(pkg);
         updatePubspecVersion(pkg);
         const currentVersionChangelog = updateChangeLogAndGet(pkg);
         core.info(`Current version changelog:\n ${currentVersionChangelog}`);
@@ -400,7 +401,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.isFlutterPackage = exports.sleep = exports.publishToPub = exports.releaseGithubVersion = exports.commitAndTag = exports.showCurrentBranchName = exports.checkShellEnv = exports.client = void 0;
+exports.tryCheckFlutterEnv = exports.isFlutterPackage = exports.sleep = exports.publishToPub = exports.releaseGithubVersion = exports.commitAndTag = exports.showCurrentBranchName = exports.checkShellEnv = exports.client = void 0;
 const core_1 = __nccwpck_require__(1680);
 const github_1 = __nccwpck_require__(1240);
 const rest_1 = __nccwpck_require__(3306);
@@ -546,6 +547,15 @@ function isFlutterPackage(filePath) {
     return !!environment.flutter;
 }
 exports.isFlutterPackage = isFlutterPackage;
+function tryCheckFlutterEnv(pkg) {
+    if (isFlutterPackage(`${pkg.subpath}/pubspec.yaml`)) {
+        const flutterEnv = shelljs_1.default.which('flutter');
+        if (!flutterEnv) {
+            throw new Error('The package is a flutter package, but flutter is not installed');
+        }
+    }
+}
+exports.tryCheckFlutterEnv = tryCheckFlutterEnv;
 
 
 /***/ }),
