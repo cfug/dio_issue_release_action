@@ -174,7 +174,7 @@ export function isFlutterPackage(filePath: string): boolean {
 }
 
 export function tryCheckFlutterEnv(pkg: Pkg): void {
-  if (isFlutterPackage(`${pkg.subpath}/pubspec.yaml`)) {
+  if (isFlutterPackage(pkg.subpath)) {
     const flutterEnv = shelljs.which('flutter')
     if (!flutterEnv) {
       throw new Error(
