@@ -50,3 +50,10 @@ runs:
         GITHUB_TOKEN: ${{inputs.github-token}}
         PUB_JSON: ${{inputs.pub-credentials-json}}
         DRY_RUN: ${{inputs.dry-run}}
+    - uses: k-paxian/dart-package-publisher@v1.5.1
+      with:
+        credentialJson: ${{ inputs.pub-credentials-json }}
+        flutter: {{steps.check_package_type.outputs.IS_FLUTTER == 1}}
+        skipTests: true
+        dryRunOnly: ${{ inputs.dry-run }}
+        relativePath: ${{ steps.check_package_type.outputs.PACKAGE_SUBPATH }}

@@ -1,12 +1,7 @@
 import * as core from '@actions/core'
 import * as semver from 'semver'
 import fs from 'fs'
-import {
-  commitAndTag,
-  publishToPub,
-  releaseGithubVersion,
-  tryCheckFlutterEnv
-} from './util'
+import {commitAndTag, releaseGithubVersion, tryCheckFlutterEnv} from './util'
 import {context} from '@actions/github'
 
 export interface Pkg {
@@ -50,8 +45,6 @@ Triggered by @${context.actor} on ${commentUrl}`
   commitAndTag(commitMsg)
 
   await releaseGithubVersion(tag, releaseName, currentVersionChangelog)
-
-  publishToPub(pkg)
 }
 
 const _packagesMapping: {

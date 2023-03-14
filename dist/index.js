@@ -191,7 +191,6 @@ function handleComment(commentBody) {
 Triggered by @${github_1.context.actor} on ${commentUrl}`;
         (0, util_1.commitAndTag)(commitMsg);
         yield (0, util_1.releaseGithubVersion)(tag, releaseName, currentVersionChangelog);
-        (0, util_1.publishToPub)(pkg);
     });
 }
 exports.handleComment = handleComment;
@@ -401,13 +400,14 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.tryCheckFlutterEnv = exports.isFlutterPackage = exports.sleep = exports.publishToPub = exports.releaseGithubVersion = exports.commitAndTag = exports.showCurrentBranchName = exports.checkShellEnv = exports.client = void 0;
+exports.writeEnvFile = exports.tryCheckFlutterEnv = exports.isFlutterPackage = exports.sleep = exports.releaseGithubVersion = exports.commitAndTag = exports.showCurrentBranchName = exports.checkShellEnv = exports.client = void 0;
 const core_1 = __nccwpck_require__(1680);
 const github_1 = __nccwpck_require__(1240);
 const rest_1 = __nccwpck_require__(3306);
 const shelljs_1 = __importDefault(__nccwpck_require__(3473));
 const fs_1 = __importDefault(__nccwpck_require__(7147));
 const yaml_1 = __importDefault(__nccwpck_require__(7838));
+const process_1 = __nccwpck_require__(7282);
 function client() {
     // Get the GitHub token from the environment
     const token = process.env.GITHUB_TOKEN;
@@ -488,37 +488,6 @@ function releaseGithubVersion(tagName, releaseName, changelog) {
     });
 }
 exports.releaseGithubVersion = releaseGithubVersion;
-function publishToPub(pkg) {
-    const credentialsJson = process.env.PUB_JSON;
-    const dryRunInput = process.env.DRY_RUN;
-    const dryRun = dryRunInput === 'true';
-    if (!credentialsJson) {
-        throw new Error('No credentials found, please set pub-credentials-json input.');
-    }
-    // Write credentials to the pub file
-    if (!shelljs_1.default.test('-d', '~/.pub-cache')) {
-        shelljs_1.default.mkdir('~/.pub-cache');
-    }
-    shelljs_1.default.exec(`echo '${credentialsJson}' > ~/.pub-cache/credentials.json`);
-    const subpath = pkg.subpath;
-    const isFlutter = isFlutterPackage(subpath);
-    const publishCommand = isFlutter ? 'flutter pub publish' : 'dart pub publish';
-    (0, core_1.info)(`The ${pkg.name} is a ${isFlutter ? 'flutter' : 'dart'} package`);
-    (0, core_1.info)(`Use ${publishCommand} to publish`);
-    const tryRun = shelljs_1.default.exec(`cd ${subpath} && ${publishCommand} --dry-run`);
-    throwShellError(tryRun);
-    if (dryRun) {
-        (0, core_1.info)('Because the input "dry-run" is true, so the publish to pub is skipped.');
-        return;
-    }
-    const command = `cd ${subpath}
-  ${publishCommand} --server=https://pub.dev --force
-  `;
-    const result = shelljs_1.default.exec(command);
-    throwShellError(result);
-    (0, core_1.info)(`Publish success: open https://pub.dev/packages/${pkg.name}/versions/${pkg.version} to see the version`);
-}
-exports.publishToPub = publishToPub;
 function throwShellError(result) {
     if (result.code !== 0) {
         throw new Error(`Shell error: ${result.stderr}`);
@@ -550,6 +519,10 @@ function tryCheckFlutterEnv(pkg) {
     }
 }
 exports.tryCheckFlutterEnv = tryCheckFlutterEnv;
+function writeEnvFile(key, value) {
+    fs_1.default.appendFileSync(process_1.env['GITHUB_OUTPUT'] || '', `\n${key}=${value}`);
+}
+exports.writeEnvFile = writeEnvFile;
 
 
 /***/ }),
@@ -22823,6 +22796,14 @@ module.exports = require("os");
 
 "use strict";
 module.exports = require("path");
+
+/***/ }),
+
+/***/ 7282:
+/***/ ((module) => {
+
+"use strict";
+module.exports = require("process");
 
 /***/ }),
 

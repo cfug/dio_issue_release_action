@@ -5,6 +5,7 @@ import shelljs from 'shelljs'
 import {Pkg} from './handle_comment'
 import fs from 'fs'
 import Yaml from 'yaml'
+import {env} from 'process'
 
 export function client(): Octokit {
   // Get the GitHub token from the environment
@@ -102,56 +103,6 @@ export async function releaseGithubVersion(
   info(`Release success: open ${release.data.html_url} to see it`)
 }
 
-export function publishToPub(pkg: Pkg): void {
-  const credentialsJson = process.env.PUB_JSON
-  const dryRunInput = process.env.DRY_RUN
-
-  const dryRun = dryRunInput === 'true'
-
-  if (!credentialsJson) {
-    throw new Error(
-      'No credentials found, please set pub-credentials-json input.'
-    )
-  }
-
-  // Write credentials to the pub file
-  if (!shelljs.test('-d', '~/.pub-cache')) {
-    shelljs.mkdir('~/.pub-cache')
-  }
-  shelljs.exec(`echo '${credentialsJson}' > ~/.pub-cache/credentials.json`)
-
-  const subpath = pkg.subpath
-  const isFlutter = isFlutterPackage(subpath)
-
-  const publishCommand = isFlutter ? 'flutter pub publish' : 'dart pub publish'
-
-  info(`The ${pkg.name} is a ${isFlutter ? 'flutter' : 'dart'} package`)
-  info(`Use ${publishCommand} to publish`)
-
-  const tryRun = shelljs.exec(`cd ${subpath} && ${publishCommand} --dry-run`)
-
-  throwShellError(tryRun)
-
-  if (dryRun) {
-    info(
-      'Because the input "dry-run" is true, so the publish to pub is skipped.'
-    )
-    return
-  }
-
-  const command = `cd ${subpath}
-  ${publishCommand} --server=https://pub.dev --force
-  `
-
-  const result = shelljs.exec(command)
-
-  throwShellError(result)
-
-  info(
-    `Publish success: open https://pub.dev/packages/${pkg.name}/versions/${pkg.version} to see the version`
-  )
-}
-
 function throwShellError(result: shelljs.ShellString): void {
   if (result.code !== 0) {
     throw new Error(`Shell error: ${result.stderr}`)
@@ -182,4 +133,8 @@ export function tryCheckFlutterEnv(pkg: Pkg): void {
       )
     }
   }
+}
+
+export function writeEnvFile(key: string, value: string): void {
+  fs.appendFileSync(env['GITHUB_OUTPUT'] || '', `\n${key}=${value}`)
 }
