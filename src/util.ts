@@ -1,4 +1,4 @@
-import {getInput, info} from '@actions/core'
+import {info} from '@actions/core'
 import {context} from '@actions/github'
 import {Octokit} from '@octokit/rest'
 import shelljs from 'shelljs'
@@ -8,7 +8,7 @@ import Yaml from 'yaml'
 
 export function client(): Octokit {
   // Get the GitHub token from the environment
-  const token = getInput('github-token', {required: true})
+  const token = process.env.GITHUB_TOKEN
   if (!token) {
     throw new Error('No token found, please set github-token input.')
   }
@@ -21,11 +21,6 @@ export function checkShellEnv(): void {
   const checkGit = shelljs.which('git')
   if (!checkGit) {
     throw new Error('Git is not installed')
-  }
-
-  const checkDart = shelljs.which('dart')
-  if (!checkDart) {
-    throw new Error('Dart is not installed')
   }
 }
 
@@ -57,7 +52,7 @@ git commit -m "${message}"`
 }
 function tagAndPush(): shelljs.ShellString {
   // config token for push
-  const token = getInput('github-token', {required: true})
+  const token = process.env.GITHUB_TOKEN
   if (!token) {
     throw new Error('No token found, please set github-token input.')
   }
@@ -108,11 +103,8 @@ export async function releaseGithubVersion(
 }
 
 export function publishToPub(pkg: Pkg): void {
-  const credentialsJson = getInput('pub-credentials-json', {required: true})
-  const dryRunInput = getInput('dry-run', {
-    required: true,
-    trimWhitespace: true
-  })
+  const credentialsJson = process.env.PUB_JSON
+  const dryRunInput = process.env.DRY_RUN
 
   const dryRun = dryRunInput === 'true'
 
@@ -129,7 +121,7 @@ export function publishToPub(pkg: Pkg): void {
   shelljs.exec(`echo '${credentialsJson}' > ~/.pub-cache/credentials.json`)
 
   const subpath = pkg.subpath
-  const isFlutter = isFlutterPackage(`${subpath}/pubspec.yaml`)
+  const isFlutter = isFlutterPackage(subpath)
 
   const publishCommand = isFlutter ? 'flutter pub publish' : 'dart pub publish'
 
@@ -171,7 +163,8 @@ export async function sleep(ms: number): Promise<void> {
 }
 
 export function isFlutterPackage(filePath: string): boolean {
-  const content = fs.readFileSync(filePath, 'utf8')
+  const fileAbsPath = `${process.env.GITHUB_WORKSPACE}/${filePath}/pubspec.yaml`
+  const content = fs.readFileSync(fileAbsPath, 'utf8')
   const yaml = Yaml.parse(content)
   const environment = yaml.environment
   if (!environment) {
@@ -181,7 +174,7 @@ export function isFlutterPackage(filePath: string): boolean {
 }
 
 export function tryCheckFlutterEnv(pkg: Pkg): void {
-  if (isFlutterPackage(`${pkg.subpath}/pubspec.yaml`)) {
+  if (isFlutterPackage(pkg.subpath)) {
     const flutterEnv = shelljs.which('flutter')
     if (!flutterEnv) {
       throw new Error(
