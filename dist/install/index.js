@@ -433,7 +433,7 @@ const fs_1 = __importDefault(__nccwpck_require__(7147));
 const yaml_1 = __importDefault(__nccwpck_require__(7838));
 function client() {
     // Get the GitHub token from the environment
-    const token = (0, core_1.getInput)('github-token', { required: true });
+    const token = process.env.GITHUB_TOKEN;
     if (!token) {
         throw new Error('No token found, please set github-token input.');
     }
@@ -472,7 +472,7 @@ git commit -m "${message}"`;
 }
 function tagAndPush() {
     // config token for push
-    const token = (0, core_1.getInput)('github-token', { required: true });
+    const token = process.env.GITHUB_TOKEN;
     if (!token) {
         throw new Error('No token found, please set github-token input.');
     }
@@ -512,11 +512,8 @@ function releaseGithubVersion(tagName, releaseName, changelog) {
 }
 exports.releaseGithubVersion = releaseGithubVersion;
 function publishToPub(pkg) {
-    const credentialsJson = (0, core_1.getInput)('pub-credentials-json', { required: true });
-    const dryRunInput = (0, core_1.getInput)('dry-run', {
-        required: true,
-        trimWhitespace: true
-    });
+    const credentialsJson = process.env.PUB_JSON;
+    const dryRunInput = process.env.DRY_RUN;
     const dryRun = dryRunInput === 'true';
     if (!credentialsJson) {
         throw new Error('No credentials found, please set pub-credentials-json input.');

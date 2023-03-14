@@ -21,6 +21,10 @@ runs:
     - shell: bash
       id: 'check_package_type'
       name: 'Check package is flutter or dart'
+      env:
+        GITHUB_TOKEN: ${{inputs.github-token}}
+        PUB_JSON: ${{inputs.pub-credentials-json}}
+        DRY_RUN: ${{inputs.dry-run}}
       run: |
         node ${{github.action_path}}/dist/install/index.js
     - uses: dart-lang/setup-dart@v1
@@ -42,3 +46,7 @@ runs:
       name: 'Release ${{steps.check_package_type.outputs.RELEASE_TAG}} and publish to pub.dev'
       run: |
         node ${{github.action_path}}/dist/index.js
+      env:
+        GITHUB_TOKEN: ${{inputs.github-token}}
+        PUB_JSON: ${{inputs.pub-credentials-json}}
+        DRY_RUN: ${{inputs.dry-run}}

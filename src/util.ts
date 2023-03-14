@@ -1,4 +1,4 @@
-import {getInput, info} from '@actions/core'
+import {info} from '@actions/core'
 import {context} from '@actions/github'
 import {Octokit} from '@octokit/rest'
 import shelljs from 'shelljs'
@@ -8,7 +8,7 @@ import Yaml from 'yaml'
 
 export function client(): Octokit {
   // Get the GitHub token from the environment
-  const token = getInput('github-token', {required: true})
+  const token = process.env.GITHUB_TOKEN
   if (!token) {
     throw new Error('No token found, please set github-token input.')
   }
@@ -52,7 +52,7 @@ git commit -m "${message}"`
 }
 function tagAndPush(): shelljs.ShellString {
   // config token for push
-  const token = getInput('github-token', {required: true})
+  const token = process.env.GITHUB_TOKEN
   if (!token) {
     throw new Error('No token found, please set github-token input.')
   }
@@ -103,11 +103,8 @@ export async function releaseGithubVersion(
 }
 
 export function publishToPub(pkg: Pkg): void {
-  const credentialsJson = getInput('pub-credentials-json', {required: true})
-  const dryRunInput = getInput('dry-run', {
-    required: true,
-    trimWhitespace: true
-  })
+  const credentialsJson = process.env.PUB_JSON
+  const dryRunInput = process.env.DRY_RUN
 
   const dryRun = dryRunInput === 'true'
 
