@@ -121,7 +121,7 @@ export function publishToPub(pkg: Pkg): void {
   shelljs.exec(`echo '${credentialsJson}' > ~/.pub-cache/credentials.json`)
 
   const subpath = pkg.subpath
-  const isFlutter = isFlutterPackage(`${subpath}/pubspec.yaml`)
+  const isFlutter = isFlutterPackage(subpath)
 
   const publishCommand = isFlutter ? 'flutter pub publish' : 'dart pub publish'
 
