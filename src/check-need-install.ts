@@ -1,9 +1,7 @@
 import * as core from '@actions/core'
-import {env} from 'process'
 import {check} from './check'
 import {convertPkg} from './handle_comment'
-import {isFlutterPackage} from './util'
-import * as fs from 'fs'
+import {isFlutterPackage, writeEnvFile} from './util'
 
 async function run(): Promise<void> {
   try {
@@ -11,10 +9,6 @@ async function run(): Promise<void> {
   } catch (error) {
     if (error instanceof Error) core.setFailed(error.message)
   }
-}
-
-function writeEnvFile(key: string, value: string): void {
-  fs.appendFileSync(env['GITHUB_OUTPUT'] || '', `\n${key}=${value}`)
 }
 
 async function packageType(commentBody: string): Promise<void> {
