@@ -9,9 +9,10 @@
     "format": "prettier --write '**/*.ts'",
     "format-check": "prettier --check '**/*.ts'",
     "lint": "eslint src/**/*.ts",
-    "package": "ncc build --source-map --license licenses.txt",
+    "pkg-main": "ncc build --source-map --license licenses.txt",
+    "pkg-install": "ncc build lib/check-need-install.js -o dist/install",
     "test": "jest",
-    "dist": "pnpm run build && pnpm run package"
+    "dist": "pnpm run build && pnpm run pkg-main && pnpm run pkg-install"
   },
   "repository": {
     "type": "git",

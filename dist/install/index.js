@@ -1,5 +1,85 @@
-require('./sourcemap-register.js');/******/ (() => { // webpackBootstrap
+/******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ({
+
+/***/ 3865:
+/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
+
+"use strict";
+
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+const core = __importStar(__nccwpck_require__(1680));
+const process_1 = __nccwpck_require__(7282);
+const check_1 = __nccwpck_require__(3059);
+const handle_comment_1 = __nccwpck_require__(9362);
+const util_1 = __nccwpck_require__(8636);
+const fs = __importStar(__nccwpck_require__(7147));
+function run() {
+    return __awaiter(this, void 0, void 0, function* () {
+        try {
+            yield (0, check_1.check)(packageType);
+        }
+        catch (error) {
+            if (error instanceof Error)
+                core.setFailed(error.message);
+        }
+    });
+}
+function writeEnvFile(key, value) {
+    fs.appendFileSync(process_1.env['GITHUB_OUTPUT'] || '', `\n${key}=${value}`);
+}
+function packageType(commentBody) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const pkg = (0, handle_comment_1.convertPkg)(commentBody);
+        if (!pkg) {
+            throw new Error(`${commentBody} cannot be converted to a package`);
+        }
+        const subPath = pkg.subpath;
+        const isFlutter = (0, util_1.isFlutterPackage)(subPath);
+        core.info(`Package ${pkg.name} is a ${isFlutter ? 'Flutter' : 'Dart'} package`);
+        const isFlutterEnv = isFlutter ? 1 : 0;
+        writeEnvFile('IS_FLUTTER', isFlutterEnv.toString());
+        writeEnvFile('PACKAGE_NAME', pkg.name);
+        writeEnvFile('PACKAGE_VERSION', pkg.version);
+        writeEnvFile('PACKAGE_SUBPATH', subPath);
+        writeEnvFile('RELEASE_TAG', `${pkg.name}: v${pkg.version}`);
+    });
+}
+run();
+
+
+/***/ }),
 
 /***/ 3059:
 /***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
@@ -322,63 +402,6 @@ function checkVersionContentEmpty(versionContent) {
     }
 }
 exports.checkVersionContentEmpty = checkVersionContentEmpty;
-
-
-/***/ }),
-
-/***/ 3029:
-/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
-
-"use strict";
-
-var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    var desc = Object.getOwnPropertyDescriptor(m, k);
-    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
-      desc = { enumerable: true, get: function() { return m[k]; } };
-    }
-    Object.defineProperty(o, k2, desc);
-}) : (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    o[k2] = m[k];
-}));
-var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
-    Object.defineProperty(o, "default", { enumerable: true, value: v });
-}) : function(o, v) {
-    o["default"] = v;
-});
-var __importStar = (this && this.__importStar) || function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
-    __setModuleDefault(result, mod);
-    return result;
-};
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-const core = __importStar(__nccwpck_require__(1680));
-const check_1 = __nccwpck_require__(3059);
-const handle_comment_1 = __nccwpck_require__(9362);
-function run() {
-    return __awaiter(this, void 0, void 0, function* () {
-        try {
-            yield (0, check_1.check)(handle_comment_1.handleComment);
-        }
-        catch (error) {
-            if (error instanceof Error)
-                core.setFailed(error.message);
-        }
-    });
-}
-run();
 
 
 /***/ }),
@@ -22813,6 +22836,14 @@ module.exports = require("path");
 
 /***/ }),
 
+/***/ 7282:
+/***/ ((module) => {
+
+"use strict";
+module.exports = require("process");
+
+/***/ }),
+
 /***/ 5477:
 /***/ ((module) => {
 
@@ -31253,9 +31284,8 @@ module.exports = JSON.parse('[[[0,44],"disallowed_STD3_valid"],[[45,46],"valid"]
 /******/ 	// startup
 /******/ 	// Load entry module and return exports
 /******/ 	// This entry module is referenced by other modules so it can't be inlined
-/******/ 	var __webpack_exports__ = __nccwpck_require__(3029);
+/******/ 	var __webpack_exports__ = __nccwpck_require__(3865);
 /******/ 	module.exports = __webpack_exports__;
 /******/ 	
 /******/ })()
 ;
-//# sourceMappingURL=index.js.map

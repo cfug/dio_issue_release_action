@@ -22,11 +22,6 @@ export function checkShellEnv(): void {
   if (!checkGit) {
     throw new Error('Git is not installed')
   }
-
-  const checkDart = shelljs.which('dart')
-  if (!checkDart) {
-    throw new Error('Dart is not installed')
-  }
 }
 
 export function showCurrentBranchName(): void {
