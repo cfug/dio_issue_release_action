@@ -7,17 +7,12 @@ const basePath = '/tmp/dio'
 
 beforeAll(() => {
   shelljs.exec(`git clone ${dioUrl} ${basePath}`)
+  process.env.GITHUB_WORKSPACE = basePath
 })
 
-function getPubspecPath(subpath: string): string {
-  return `${basePath}/${subpath}/pubspec.yaml`
-}
-
 test('check flutter type', () => {
-  expect(isFlutterPackage(getPubspecPath('dio'))).toBeFalsy()
-  expect(isFlutterPackage(getPubspecPath('plugins/cookie_manager'))).toBeFalsy()
-  expect(isFlutterPackage(getPubspecPath('plugins/http2_adapter'))).toBeFalsy()
-  expect(
-    isFlutterPackage(getPubspecPath('plugins/native_dio_adapter'))
-  ).toBeTruthy()
+  expect(isFlutterPackage('dio')).toBeFalsy()
+  expect(isFlutterPackage('plugins/cookie_manager')).toBeFalsy()
+  expect(isFlutterPackage('plugins/http2_adapter')).toBeFalsy()
+  expect(isFlutterPackage('plugins/native_dio_adapter')).toBeTruthy()
 })
