@@ -531,7 +531,8 @@ function sleep(ms) {
 }
 exports.sleep = sleep;
 function isFlutterPackage(filePath) {
-    const content = fs_1.default.readFileSync(filePath, 'utf8');
+    const fileAbsPath = `${process.env.GITHUB_WORKSPACE}/${filePath}`;
+    const content = fs_1.default.readFileSync(fileAbsPath, 'utf8');
     const yaml = yaml_1.default.parse(content);
     const environment = yaml.environment;
     if (!environment) {

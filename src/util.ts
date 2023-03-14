@@ -163,7 +163,8 @@ export async function sleep(ms: number): Promise<void> {
 }
 
 export function isFlutterPackage(filePath: string): boolean {
-  const content = fs.readFileSync(filePath, 'utf8')
+  const fileAbsPath = `${process.env.GITHUB_WORKSPACE}/${filePath}`
+  const content = fs.readFileSync(fileAbsPath, 'utf8')
   const yaml = Yaml.parse(content)
   const environment = yaml.environment
   if (!environment) {
