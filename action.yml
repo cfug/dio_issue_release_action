@@ -27,23 +27,8 @@ runs:
         DRY_RUN: ${{inputs.dry-run}}
       run: |
         node ${{github.action_path}}/dist/install/index.js
-    - uses: dart-lang/setup-dart@v1
-      name: 'Install Dart'
-      if: steps.check_package_type.outputs.IS_FLUTTER != 1
-      with:
-        sdk: 'stable'
-    - uses: subosito/flutter-action@v2
-      name: 'Install Flutter'
-      if: steps.check_package_type.outputs.IS_FLUTTER == 1
-      with:
-        channel: 'stable'
     - shell: bash
-      name: 'show the dart or flutter install path'
-      run: |
-        echo "dart: $(which dart)"
-        echo "flutter: $(which flutter)"
-    - shell: bash
-      name: 'Release ${{steps.check_package_type.outputs.RELEASE_TAG}} and publish to pub.dev'
+      name: 'Release ${{steps.check_package_type.outputs.RELEASE_TAG}}'
       run: |
         node ${{github.action_path}}/dist/index.js
       env:
@@ -51,6 +36,7 @@ runs:
         PUB_JSON: ${{inputs.pub-credentials-json}}
         DRY_RUN: ${{inputs.dry-run}}
     - uses: k-paxian/dart-package-publisher@v1.5.1
+      name: 'Publish to pub.dev'
       with:
         credentialJson: ${{ inputs.pub-credentials-json }}
         flutter: ${{steps.check_package_type.outputs.IS_FLUTTER == 1}}
