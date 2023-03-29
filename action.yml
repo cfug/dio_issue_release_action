@@ -27,14 +27,6 @@ runs:
         DRY_RUN: ${{inputs.dry-run}}
       run: |
         node ${{github.action_path}}/dist/install/index.js
-    - shell: bash
-      name: 'Release ${{steps.check_package_type.outputs.RELEASE_TAG}}'
-      run: |
-        node ${{github.action_path}}/dist/index.js
-      env:
-        GITHUB_TOKEN: ${{inputs.github-token}}
-        PUB_JSON: ${{inputs.pub-credentials-json}}
-        DRY_RUN: ${{inputs.dry-run}}
     - uses: k-paxian/dart-package-publisher@v1.5.1
       name: 'Publish to pub.dev'
       with:
@@ -43,3 +35,9 @@ runs:
         skipTests: true
         dryRunOnly: ${{ inputs.dry-run }}
         relativePath: ${{ steps.check_package_type.outputs.PACKAGE_SUBPATH }}
+    - shell: bash
+      name: 'Release ${{steps.check_package_type.outputs.RELEASE_TAG}}'
+      run: |
+        node ${{github.action_path}}/dist/index.js
+      env:
+        GITHUB_TOKEN: ${{inputs.github-token}}
