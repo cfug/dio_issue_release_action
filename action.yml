@@ -28,12 +28,12 @@ runs:
       run: |
         node ${{github.action_path}}/dist/install/index.js
     - uses: k-paxian/dart-package-publisher@v1.5.1
-      name: 'Publish to pub.dev'
+      name: 'Dry run with current code before commit'
       with:
         credentialJson: ${{ inputs.pub-credentials-json }}
         flutter: ${{steps.check_package_type.outputs.IS_FLUTTER == 1}}
         skipTests: true
-        dryRunOnly: ${{ inputs.dry-run }}
+        dryRunOnly: true
         relativePath: ${{ steps.check_package_type.outputs.PACKAGE_SUBPATH }}
     - shell: bash
       name: 'Release ${{steps.check_package_type.outputs.RELEASE_TAG}}'
@@ -41,3 +41,11 @@ runs:
         node ${{github.action_path}}/dist/index.js
       env:
         GITHUB_TOKEN: ${{inputs.github-token}}
+    - uses: k-paxian/dart-package-publisher@v1.5.1
+      name: 'Publish to pub.dev'
+      with:
+        credentialJson: ${{ inputs.pub-credentials-json }}
+        flutter: ${{steps.check_package_type.outputs.IS_FLUTTER == 1}}
+        skipTests: true
+        dryRunOnly: ${{ inputs.dry-run }}
+        relativePath: ${{ steps.check_package_type.outputs.PACKAGE_SUBPATH }}
