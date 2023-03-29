@@ -41,9 +41,10 @@ action 使用时，如果权限不足，可以修改配置
 
 1. 检查 issue 评论者是否有写入权限
 1. 检查评论内容是否为 `dio: v1.0.0` 这样的格式
-1. 检查包是否是 dio 或几个 plugin 之一
+1. 检查包是否是 `dio` 或几个 plugin 之一
 1. 根据包的类型配置判断是安装 dart 还是 flutter 库
-1. 是则修改对应包的 pubspec.yaml 文件中的 version 字段
+1. 修改前先执行一次 publish 的 dry-run 操作
+1. 修改对应包的 `pubspec.yaml` 文件中的 `version` 字段
 1. 修改 CHANGELOG.md 文件，并把 unrelease 的内容移动到新的版本中
 1. 执行 git add, git commit, git push
 1. 在 main 分支上打 release tag
