@@ -287,7 +287,9 @@ function updateChangeLogAndGet(pkg) {
         if (line.startsWith('##') && line.includes('Unreleased')) {
             startIndex = index;
         }
-        else if (startIndex !== -1 && line.startsWith('##')) {
+        else if (startIndex !== -1 &&
+            line.startsWith('##') &&
+            !line.startsWith('###')) {
             endIndex = index;
             break;
         }
