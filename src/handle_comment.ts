@@ -161,7 +161,11 @@ function updateChangeLogAndGet(pkg: Pkg): string {
     const line = lines[index]
     if (line.startsWith('##') && line.includes('Unreleased')) {
       startIndex = index
-    } else if (startIndex !== -1 && line.startsWith('##')) {
+    } else if (
+      startIndex !== -1 &&
+      line.startsWith('##') &&
+      !line.startsWith('###')
+    ) {
       endIndex = index
       break
     }
