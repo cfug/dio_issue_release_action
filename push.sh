@@ -1,6 +1,8 @@
 #!/bin/zsh
 . ~/.zshrc
 
+set -e
+
 _message=$1
 
 pnpm run dist

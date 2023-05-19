@@ -33,6 +33,7 @@
     "@actions/github": "^5.1.1",
     "@octokit/core": "^4.2.0",
     "@octokit/rest": "^19.0.8",
+    "@octokit/request": "^6.2.5",
     "semver": "^7.5.1",
     "shelljs": "^0.8.5",
     "yaml": "^2.2.2"
