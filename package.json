@@ -1,6 +1,6 @@
 {
   "name": "dio_issue_release_action",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "private": true,
   "description": "Add github release when issue closed.",
   "main": "lib/main.js",

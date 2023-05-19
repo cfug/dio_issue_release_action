@@ -19,4 +19,4 @@ else
 fi
 
 echo "Pushing to GitHub..."
-hp git push
+git push

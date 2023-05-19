@@ -1,7 +1,8 @@
 import {
   checkName,
   checkVersionContentEmpty,
-  convertPkg
+  convertPkg,
+  convertPkgList
 } from '../src/handle_comment'
 import {expect, test} from '@jest/globals'
 
@@ -22,6 +23,28 @@ test('convertPkg', () => {
     version: '1.0.0',
     subpath: 'plugins/cookie_manager'
   })
+})
+
+test('convertPkgList', () => {
+  const commentBody = `
+    dio: v1.0.0
+    cookie_manager: v1.0.0
+  `
+
+  const pkgList = convertPkgList(commentBody)
+  expect(pkgList.length).toBe(2)
+  expect(pkgList).toEqual([
+    {
+      name: 'dio',
+      version: '1.0.0',
+      subpath: 'dio'
+    },
+    {
+      name: 'cookie_manager',
+      version: '1.0.0',
+      subpath: 'plugins/cookie_manager'
+    }
+  ])
 })
 
 test('check_change_log_change', () => {

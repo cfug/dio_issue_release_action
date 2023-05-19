@@ -3,6 +3,7 @@ import * as semver from 'semver'
 import fs from 'fs'
 import {commitAndTag, releaseGithubVersion, tryCheckFlutterEnv} from './util'
 import {context} from '@actions/github'
+import {publishPkg} from './publish'
 
 export interface Pkg {
   name: string
@@ -13,38 +14,47 @@ export interface Pkg {
 export async function handleComment(commentBody: string): Promise<void> {
   core.info(`Comment body: ${commentBody}`)
 
-  const pkg = convertPkg(commentBody)
-  if (!pkg) {
-    core.info('Comment body is not a package, exiting')
-    return
-  }
+  const pkgList = convertPkgList(commentBody)
 
-  core.info(`Package info:`)
-  core.info(`  name: ${pkg.name}`)
-  core.info(`  version: ${pkg.version}`)
-  core.info(`  subpath: ${pkg.subpath}`)
-  core.info(`Start handle it`)
+  for (const pkg of pkgList) {
+    if (!pkg) {
+      core.info('Comment body is not a package, exiting')
+      return
+    }
 
-  tryCheckFlutterEnv(pkg)
+    core.info(`Package info:`)
+    core.info(`  name: ${pkg.name}`)
+    core.info(`  version: ${pkg.version}`)
+    core.info(`  subpath: ${pkg.subpath}`)
+    core.info(`Start handle ${pkg.name} - ${pkg.version}`)
 
-  updatePubspecVersion(pkg)
-  const currentVersionChangelog = updateChangeLogAndGet(pkg)
+    tryCheckFlutterEnv(pkg)
 
-  core.info(`Current version changelog:\n ${currentVersionChangelog}`)
+    updatePubspecVersion(pkg)
+    const currentVersionChangelog = updateChangeLogAndGet(pkg)
 
-  // TODO: commit and push
-  const tag = `${pkg.name}_v${pkg.version}`
-  const commitTitle = `🔖 ${pkg.name} v${pkg.version}`
-  const releaseName = `${pkg.name} ${pkg.version}`
+    core.info(`Current version changelog:\n ${currentVersionChangelog}`)
 
-  const commentUrl = context.payload?.comment?.html_url
+    // Try publish dry-run first
+    await publishPkg(pkg, true)
 
-  const commitMsg = `${commitTitle}
+    // publish package
+    await publishPkg(pkg, false)
+
+    const tag = `${pkg.name}_v${pkg.version}`
+    const commitTitle = `🔖 ${pkg.name} v${pkg.version}`
+    const releaseName = `${pkg.name} ${pkg.version}`
+
+    const commentUrl = context.payload?.comment?.html_url
+
+    const commitMsg = `${commitTitle}
 Triggered by @${context.actor} on ${commentUrl}`
 
-  commitAndTag(commitMsg)
+    commitAndTag(commitMsg)
 
-  await releaseGithubVersion(tag, releaseName, currentVersionChangelog)
+    await releaseGithubVersion(tag, releaseName, currentVersionChangelog)
+    core.info(`Release ${tag} success`)
+  }
 }
 
 const _packagesMapping: {
@@ -111,6 +121,23 @@ export function convertPkg(body: string): Pkg | null {
   } else {
     return null
   }
+}
+
+export function convertPkgList(body: string): Pkg[] {
+  const lines = body.trim().split('\n')
+
+  const pkgs = Array<Pkg>()
+
+  for (const line of lines) {
+    const pkg = convertPkg(line.trim())
+    if (pkg) {
+      pkgs.push(pkg)
+    }
+  }
+
+  core.info('Convert packages:')
+
+  return pkgs
 }
 
 function updatePubspecVersion(pkg: Pkg): void {

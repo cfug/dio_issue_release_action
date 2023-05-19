@@ -10,8 +10,8 @@ inputs:
     required: true
   dry-run:
     description: 'Default is false, set to true will not publish to pub.dev, just run pub publish --dry-run'
-    required: false
     default: 'false'
+    required: false
 runs:
   using: composite
   steps:
@@ -27,25 +27,21 @@ runs:
         DRY_RUN: ${{inputs.dry-run}}
       run: |
         node ${{github.action_path}}/dist/install/index.js
-    - uses: k-paxian/dart-package-publisher@v1.5.1
-      name: 'Dry run with current code before commit'
+    - uses: subosito/flutter-action@v2
       with:
-        credentialJson: ${{ inputs.pub-credentials-json }}
-        flutter: ${{steps.check_package_type.outputs.IS_FLUTTER == 1}}
-        skipTests: true
-        dryRunOnly: true
-        relativePath: ${{ steps.check_package_type.outputs.PACKAGE_SUBPATH }}
+        channel: 'stable'
+        cache: true
     - shell: bash
       name: 'Release ${{steps.check_package_type.outputs.RELEASE_TAG}}'
       run: |
         node ${{github.action_path}}/dist/index.js
       env:
         GITHUB_TOKEN: ${{inputs.github-token}}
-    - uses: k-paxian/dart-package-publisher@v1.5.1
-      name: 'Publish to pub.dev'
-      with:
-        credentialJson: ${{ inputs.pub-credentials-json }}
-        flutter: ${{steps.check_package_type.outputs.IS_FLUTTER == 1}}
-        skipTests: true
-        dryRunOnly: ${{ inputs.dry-run }}
-        relativePath: ${{ steps.check_package_type.outputs.PACKAGE_SUBPATH }}
+    # - uses: k-paxian/dart-package-publisher@v1.5.1
+    #   name: 'Publish to pub.dev'
+    #   with:
+    #     credentialJson: ${{ inputs.pub-credentials-json }}
+    #     flutter: ${{steps.check_package_type.outputs.IS_FLUTTER == 1}}
+    #     skipTests: true
+    #     dryRunOnly: ${{ inputs.dry-run }}
+    #     relativePath: ${{ steps.check_package_type.outputs.PACKAGE_SUBPATH }}
