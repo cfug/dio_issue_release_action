@@ -14,7 +14,7 @@ Future<bool> checkUserWritePermission({
       '/repos/$owner/$repo/collaborators/$username/permission');
 
   if (showGithubLog) {
-    info('checkUserWritePermission response: $response');
+    debug('checkUserWritePermission response: $response');
   }
 
   final permission = response['permission'];

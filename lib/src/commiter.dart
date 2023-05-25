@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:github_action_context/github_action_context.dart';
 import 'package:github_action_core/github_action_core.dart';
 
+import 'files.dart';
 import 'github.dart';
 import 'pkg.dart';
 
@@ -39,37 +40,17 @@ class PkgCommiter {
 
     // 2. change CHANGELOG.md
     final changelogFile = File('${pkg.subPath}/CHANGELOG.md');
-    final changelogLines = changelogFile.readAsLinesSync();
-
-    final unreleasedTag = '## Unreleased';
-
-    final newChangelogLines = <String>[];
-    for (final line in changelogLines) {
-      if (line.startsWith(unreleasedTag)) {
-        newChangelogLines.add(line);
-        newChangelogLines.add('');
-        newChangelogLines.add('## $newVersion');
-        newChangelogLines.add('');
-      } else {
-        newChangelogLines.add(line);
-      }
-    }
-    changelogFile.writeAsStringSync(newChangelogLines.join('\n'));
+    final newChangeLog = updateChangeLog(
+      changelogFile.readAsStringSync(),
+      newVersion,
+    );
+    changelogFile.writeAsStringSync(newChangeLog);
 
     // 3. Get current version changelog
-    final currentVersionTag = '## $newVersion';
-    final currentVersionTagIndex = newChangelogLines.indexOf(currentVersionTag);
-    final currentVersionLines = <String>[];
-    for (var i = currentVersionTagIndex + 2;
-        i < newChangelogLines.length;
-        i++) {
-      final line = newChangelogLines[i];
-      if (line.startsWith('## ')) {
-        break;
-      }
-      currentVersionLines.add(line);
-    }
-    currentVersionChangeLog = currentVersionLines.join('\n').trim();
+    currentVersionChangeLog = getCurrentVersionContent(
+      newChangeLog,
+      newVersion,
+    );
   }
 
   final commitUser = 'cfug-dev';

@@ -5,7 +5,7 @@ import 'package:github/github.dart';
 import 'package:test/test.dart';
 
 void main() {
-  test('Test pkgList', () {
+  test('Test pkgList:', () {
     final pkgList1 = convertPkgList('dio: v1.0.0');
 
     expect(pkgList1.length, 1);
@@ -26,7 +26,7 @@ void main() {
     expect(pkgList3.length, 0);
   });
 
-  group('Test permission', () {
+  group('Test permission:', () {
     github = GitHub(
       auth: Authentication.withToken(Platform.environment['GITHUB_TOKEN']!),
     );
@@ -51,6 +51,30 @@ void main() {
         ),
         true,
       );
+    });
+  });
+
+  group('Test update files:', () {
+    test('Change changelog', () {
+      final src = File('test/files/changelog_src.md').readAsStringSync();
+      final dst = File('test/files/changelog_dst.md').readAsStringSync();
+
+      expect(updateChangeLog(src, '5.0.1'), dst);
+    });
+
+    test('Get version content', () {
+      final dst = File('test/files/changelog_dst.md').readAsStringSync();
+      const content = '- Change version';
+      expect(getCurrentVersionContent(dst, '5.0.1'), content);
+      expect(getCurrentVersionContent(dst, '5.0.0'), 'xxxx');
+      expect(getCurrentVersionContent(dst, 'Unreleased'), '*None.*');
+    });
+
+    test('Change pubspec.yaml', () {
+      final src = File('test/files/src.yml').readAsStringSync();
+      final dst = File('test/files/dst.yml').readAsStringSync();
+
+      expect(updatePubspec(src, '5.0.1'), dst);
     });
   });
 }
