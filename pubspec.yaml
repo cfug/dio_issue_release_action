@@ -1,0 +1,28 @@
+name: action_dio_release
+description: A github action template for dart action
+version: 1.0.0
+repository: https://github.com/Caijinglong/action_dio_release
+publish_to: none
+
+environment:
+  sdk: ^3.0.0
+
+dependencies:
+  github: ^9.14.0
+  github_action_context: ^0.2.1
+  github_action_core: ^0.2.0
+  http: ^0.13.6
+  yaml: ^3.1.2
+
+dev_dependencies:
+  lints: ^2.0.0
+  test: ^1.21.0
+
+dependency_overrides:
+#   github_action_core:
+#     version: ^0.2.0
+#     hosted: https://pub.dev
+#  github_action_context:
+#    version: ^0.2.1
+#    hosted: https://pub.dev
+  http: ^1.0.0

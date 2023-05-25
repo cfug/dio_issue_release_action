@@ -1,6 +1,7 @@
-name: 'dio-release'
-description: 'For release cfug/dio'
+name: 'dart-action'
+description: 'Use dart write action'
 author: 'CaiJingLong'
+
 inputs:
   github-token:
     description: 'The GitHub token to use for the action'
@@ -8,40 +9,24 @@ inputs:
   pub-credentials-json:
     description: 'The pub credentials json'
     required: true
-  dry-run:
-    description: 'Default is false, set to true will not publish to pub.dev, just run pub publish --dry-run'
-    default: 'false'
-    required: false
+
 runs:
   using: composite
   steps:
-    - uses: actions/setup-node@v3
-      with:
-        node-version: '16'
-    - shell: bash
-      id: 'check_package_type'
-      name: 'Check package is flutter or dart'
-      env:
-        GITHUB_TOKEN: ${{inputs.github-token}}
-        PUB_JSON: ${{inputs.pub-credentials-json}}
-        DRY_RUN: ${{inputs.dry-run}}
-      run: |
-        node ${{github.action_path}}/dist/install/index.js
     - uses: subosito/flutter-action@v2
+      name: Install Flutter
       with:
         channel: 'stable'
         cache: true
-    - shell: bash
-      name: 'Release ${{steps.check_package_type.outputs.RELEASE_TAG}}'
+    - name: Show Flutter and dart version
       run: |
-        node ${{github.action_path}}/dist/index.js
-      env:
-        GITHUB_TOKEN: ${{inputs.github-token}}
-    # - uses: k-paxian/dart-package-publisher@v1.5.1
-    #   name: 'Publish to pub.dev'
-    #   with:
-    #     credentialJson: ${{ inputs.pub-credentials-json }}
-    #     flutter: ${{steps.check_package_type.outputs.IS_FLUTTER == 1}}
-    #     skipTests: true
-    #     dryRunOnly: ${{ inputs.dry-run }}
-    #     relativePath: ${{ steps.check_package_type.outputs.PACKAGE_SUBPATH }}
+        dart --version
+        flutter --version
+      shell: bash
+    - name: Install dependencies
+      run: dart pub get
+      working-directory: ${{ github.action_path }}
+      shell: bash
+    - name: Run dart
+      run: dart run "${{ github.action_path }}/bin/main.dart"
+      shell: bash

@@ -1,0 +1,30 @@
+name: "Test dart code"
+
+on:
+  push:
+  pull_request:
+
+jobs:  
+  test:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - uses: subosito/flutter-action@v2
+      name: Install Flutter
+      with:
+        channel: 'stable'
+        cache: true
+    - name: Show Flutter and dart version
+      run: |
+        dart --version
+        flutter --version
+      shell: bash
+    - name: Install dependencies
+      run: dart pub get
+      shell: bash
+    - name: Run dart check
+      run: dart analyze --fatal-infos --fatal-warnings .
+      shell: bash
+    - name: Run tests
+      run: dart test
+      shell: bash
