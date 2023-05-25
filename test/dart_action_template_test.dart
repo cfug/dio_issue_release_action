@@ -24,6 +24,16 @@ void main() {
     // test no invalid pkg name
     final pkgList3 = convertPkgList('invalid_pkg: v1.0.0');
     expect(pkgList3.length, 0);
+
+    // test have space in before and after :
+    final pkgList4 = convertPkgList('   dio:1.0.0');
+    expect(pkgList4.length, 1);
+    expect(pkgList4[0].name, 'dio');
+
+    expect(
+      convertPkgList('dio: v1.0.0   \ncookie_manager     : v1.0.0').length,
+      2,
+    );
   });
 
   group('Test permission:', () {
