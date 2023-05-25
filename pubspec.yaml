@@ -1,6 +1,6 @@
 name: action_dio_release
 description: A github action template for dart action
-version: 1.0.0
+version: 2.0.0
 repository: https://github.com/Caijinglong/action_dio_release
 publish_to: none
 
