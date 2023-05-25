@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:github_action_core/github_action_core.dart';
 
+import 'exec.dart';
 import 'pkg.dart';
 
 void writePubTokenToFile(String token) {
@@ -29,11 +30,7 @@ Future<void> publishPkg(
   final dryRunFlag = dryRun ? '--dry-run' : '';
   final cmd = '$bin pub publish --force -C $path $dryRunFlag';
 
-  final result = await Process.run(
-    'bash',
-    ['-c', cmd],
-    runInShell: true,
-  );
+  final result = execCmdResultSync(cmd);
 
   if (result.exitCode != 0) {
     error(result.stderr.toString());

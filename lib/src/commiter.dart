@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:github_action_context/github_action_context.dart';
 import 'package:github_action_core/github_action_core.dart';
 
+import 'exec.dart';
 import 'files.dart';
 import 'github.dart';
 import 'pkg.dart';
@@ -13,15 +14,6 @@ class PkgCommiter {
   PkgCommiter(this.pkg);
 
   late String currentVersionChangeLog;
-
-  ProcessResult exec(String cmd) {
-    return Process.runSync(
-      'bash',
-      ['-c', cmd],
-      runInShell: true,
-      workingDirectory: pkg.subPath,
-    );
-  }
 
   void changeFile() {
     final newVersion = pkg.version;
@@ -68,7 +60,7 @@ class PkgCommiter {
     final cmd =
         'git config --global user.name "$commitUser" && git config --global user.email "$commitEmail"';
 
-    final result = exec(cmd);
+    final result = execCmdResultSync(cmd);
     if (result.exitCode != 0) {
       print(result.stderr);
       setFailed('set git commiter failed');
@@ -76,7 +68,7 @@ class PkgCommiter {
   }
 
   void injectGh() {
-    final result = exec(
+    final result = execCmdResultSync(
       'echo $githubToken > | gh auth login --with-token --hostname github.com -p https',
     );
 
@@ -85,7 +77,7 @@ class PkgCommiter {
       setFailed('gh login failed');
     }
 
-    final setupResult = exec(
+    final setupResult = execCmdResultSync(
       'gh auth setup-git -h github.com',
     );
 
@@ -98,7 +90,7 @@ class PkgCommiter {
   Future<void> commit() async {
     setCommiter();
     final cmd = 'git add . && git commit -m "$commitMsg"';
-    final result = exec(cmd);
+    final result = execCmdResultSync(cmd);
     if (result.exitCode != 0) {
       print(result.stderr);
       setFailed('git commit failed');
@@ -108,7 +100,7 @@ class PkgCommiter {
   Future<void> push() async {
     injectGh();
 
-    final result = exec('git push origin main');
+    final result = execCmdResultSync('git push origin main');
     if (result.exitCode != 0) {
       print(result.stderr);
       setFailed('git push failed');
