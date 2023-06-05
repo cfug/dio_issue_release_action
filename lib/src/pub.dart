@@ -28,9 +28,9 @@ Future<void> publishPkg(
   final bin = isFlutterPackage ? 'flutter' : 'dart';
 
   final dryRunFlag = dryRun ? '--dry-run' : '';
-  final cmd = '$bin pub publish --force -C $path $dryRunFlag';
+  final cmd = '$bin pub publish --force $dryRunFlag';
 
-  final result = execCmdResultSync(cmd);
+  final result = execCmdResultSync(cmd, workingPath: path);
 
   if (result.exitCode != 0) {
     error(result.stderr.toString());
