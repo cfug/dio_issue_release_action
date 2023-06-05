@@ -54,7 +54,7 @@ export async function check(
   await onSuccesss(`${comment.body}`.trim())
 }
 
-async function checkWriterPermission(
+export async function checkWriterPermission(
   owner: string,
   repo: string,
   commentUsername: string
@@ -72,19 +72,19 @@ async function checkWriterPermission(
     return false
   }
 
-  const permission = permissionLevel.data.permission
+  const permissions = permissionLevel.data.user?.permissions
 
-  if (!permission) {
-    core.info('Permission is empty, exiting')
+  if (!permissions) {
+    core.info('Permissions is empty, exiting')
     return false
   }
 
-  core.info(`Permission: ${permission}`)
+  core.info(`Permissions: ${JSON.stringify(permissions)}`)
 
-  if (permission !== 'write' && permission !== 'admin') {
-    core.info('Permission is not write or admin, exiting')
-    return false
+  if (permissions.admin || permissions.maintain) {
+    return true
   }
 
-  return true
+  core.info('Permission is not allowed.')
+  return false
 }
