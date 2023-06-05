@@ -69,7 +69,7 @@ class PkgCommiter {
 
   void injectGh() {
     final result = execCmdResultSync(
-      'echo $githubToken > | gh auth login --with-token --hostname github.com -p https',
+      'echo $githubToken | gh auth login --with-token --hostname github.com -p https',
     );
 
     if (result.exitCode != 0) {
