@@ -39,7 +39,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.check = void 0;
+exports.checkWriterPermission = exports.check = void 0;
 const core = __importStar(__nccwpck_require__(1680));
 const github_1 = __nccwpck_require__(1240);
 const util_1 = __nccwpck_require__(8636);
@@ -88,6 +88,7 @@ function check(onSuccesss) {
 }
 exports.check = check;
 function checkWriterPermission(owner, repo, commentUsername) {
+    var _a;
     return __awaiter(this, void 0, void 0, function* () {
         // Check commit user have write access
         const kit = (0, util_1.client)();
@@ -100,19 +101,20 @@ function checkWriterPermission(owner, repo, commentUsername) {
             core.info('Permission level is not 200, exiting');
             return false;
         }
-        const permission = permissionLevel.data.permission;
-        if (!permission) {
-            core.info('Permission is empty, exiting');
+        const permissions = (_a = permissionLevel.data.user) === null || _a === void 0 ? void 0 : _a.permissions;
+        if (!permissions) {
+            core.info('Permissions is empty, exiting');
             return false;
         }
-        core.info(`Permission: ${permission}`);
-        if (permission !== 'write' && permission !== 'admin') {
-            core.info('Permission is not write or admin, exiting');
-            return false;
+        core.info(`Permissions: ${JSON.stringify(permissions)}`);
+        if (permissions.admin || permissions.maintain) {
+            return true;
         }
-        return true;
+        core.info('Permission is not allowed.');
+        return false;
     });
 }
+exports.checkWriterPermission = checkWriterPermission;
 
 
 /***/ }),
