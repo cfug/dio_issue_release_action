@@ -18,7 +18,7 @@ Future<void> main(List<String> arguments) async {
     return;
   }
 
-  await checkInput();
+  await injectInput();
 
   final owner = context.repo.owner;
   final repo = context.repo.repo;
@@ -76,21 +76,22 @@ Future<void> main(List<String> arguments) async {
   // groupEnd();
 }
 
-Future<void> checkInput() async {
+Future<void> injectInput() async {
   // check input
-  final githubTokenInput = getInput('github-token');
-  if (githubTokenInput == null || githubTokenInput.isEmpty) {
-    info('The input github-token is empty, skip.');
-    return;
+  final githubTokenInput = Platform.environment['GITHUB_TOKEN'];
+
+  if (githubTokenInput == null) {
+    warning('The input GITHUB_TOKEN is null, skip.');
+    throw Exception('The input GITHUB_TOKEN is null.');
   }
 
   githubToken = githubTokenInput.trim();
   github = GitHub(auth: Authentication.withToken(githubTokenInput));
 
-  final pubToken = getInput('pub-credentials-json');
+  final pubToken = Platform.environment['PUB_CREDENTIALS_JSON'];
   if (pubToken == null || pubToken.isEmpty) {
-    info('The input pub-credentials-json is empty, skip.');
-    return;
+    warning('The input pub-credentials-json is empty, skip.');
+    throw Exception('The input pub-credentials-json is empty.');
   }
 
   // write pub token to file
