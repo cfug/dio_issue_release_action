@@ -43,7 +43,7 @@ void main() {
     showGithubLog = true;
     test('admin', () async {
       expect(
-        await checkUserWritePermission(
+        await checkUserPermission(
           owner: 'FlutterCandies',
           repo: 'flutter_photo_manager',
           username: 'caijinglong',
@@ -52,14 +52,25 @@ void main() {
       );
     });
 
-    test('write', () async {
+    test('maintain', () async {
       expect(
-        await checkUserWritePermission(
+        await checkUserPermission(
           owner: 'cfug',
           repo: 'dio',
           username: 'caijinglong',
         ),
         true,
+      );
+    });
+
+     test('not have permission', () async {
+      expect(
+        await checkUserPermission(
+          owner: 'flutter',
+          repo: 'flutter',
+          username: 'caijinglong',
+        ),
+        false,
       );
     });
   });

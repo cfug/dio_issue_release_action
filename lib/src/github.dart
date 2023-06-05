@@ -5,20 +5,30 @@ late GitHub github;
 late String githubToken;
 bool showGithubLog = false;
 
-Future<bool> checkUserWritePermission({
+Future<bool> checkUserPermission({
   required String owner,
   required String repo,
   required String username,
 }) async {
-  final response = await github.getJSON<Map, Map>(
-      '/repos/$owner/$repo/collaborators/$username/permission');
+  try {
+    final response = await github.getJSON<Map, Map>(
+        '/repos/$owner/$repo/collaborators/$username/permission');
 
-  if (showGithubLog) {
-    debug('checkUserWritePermission response: $response');
+    if (showGithubLog) {
+      debug('checkUserWritePermission response: $response');
+    }
+
+    final permissionMap = response['user']['permissions'];
+
+    if (showGithubLog) {
+      debug('checkUserWritePermission permissionMap: $permissionMap');
+    }
+
+    return permissionMap['admin'] == true || permissionMap['maintain'] == true;
+  } catch (e) {
+    warning('checkUserWritePermission error: $e');
+    return false;
   }
-
-  final permission = response['permission'];
-  return permission == 'admin' || permission == 'write';
 }
 
 Future<Release> releasePkg({
