@@ -82,7 +82,7 @@ async function checkWriterPermission(
   core.info(`Permission: ${permission}`)
 
   const allowedPermissions = ['write', 'maintain', 'admin']
-  if (!allowedPermissions.contains(permission)) {
+  if (!allowedPermissions.includes(permission)) {
     core.info('Permission is not allowed.')
     return false
   }
