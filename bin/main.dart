@@ -18,6 +18,8 @@ Future<void> main(List<String> arguments) async {
     return;
   }
 
+  await checkInput();
+
   final owner = context.repo.owner;
   final repo = context.repo.repo;
 
@@ -29,8 +31,6 @@ Future<void> main(List<String> arguments) async {
     info('The comment user $commentUser has no write permission, skip.');
     return;
   }
-
-  await checkInput();
 
   final body = context.payload['comment']['body'];
 
