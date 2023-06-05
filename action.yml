@@ -1,13 +1,13 @@
-name: 'dart-action'
-description: 'Use dart write action'
-author: 'CaiJingLong'
+name: "dart-action-for-dio"
+description: "Use dart write action"
+author: "CaiJingLong"
 
 inputs:
   github-token:
-    description: 'The GitHub token to use for the action'
+    description: "The GitHub token to use for the action"
     required: true
   pub-credentials-json:
-    description: 'The pub credentials json'
+    description: "The pub credentials json"
     required: true
 
 runs:
@@ -16,7 +16,7 @@ runs:
     - uses: subosito/flutter-action@v2
       name: Install Flutter
       with:
-        channel: 'stable'
+        channel: "stable"
         cache: true
     - name: Show Flutter and dart version
       run: |
@@ -30,3 +30,6 @@ runs:
     - name: Run dart
       run: dart run "${{ github.action_path }}/bin/main.dart"
       shell: bash
+      env:
+        GITHUB_TOKEN: ${{ inputs.github-token }}
+        PUB_CREDENTIALS_JSON: ${{ inputs.pub-credentials-json }}
