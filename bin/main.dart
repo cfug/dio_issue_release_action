@@ -81,7 +81,7 @@ Future<void> checkInput() async {
   final githubTokenInput = getInput('github-token');
   if (githubTokenInput == null || githubTokenInput.isEmpty) {
     info('The input github-token is empty, skip.');
-    return;
+    throw Exception('The input github-token is empty.');
   }
 
   githubToken = githubTokenInput.trim();
@@ -90,7 +90,7 @@ Future<void> checkInput() async {
   final pubToken = getInput('pub-credentials-json');
   if (pubToken == null || pubToken.isEmpty) {
     info('The input pub-credentials-json is empty, skip.');
-    return;
+    throw Exception('The input pub-credentials-json is empty.');
   }
 
   // write pub token to file
