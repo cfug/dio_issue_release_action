@@ -12,6 +12,24 @@ Future<void> main(List<String> arguments) async {
     return;
   }
 
+  final commentUser = context.payload['comment']['user']['login'];
+  if (commentUser == null || commentUser is! String) {
+    info('The comment user is null, skip.');
+    return;
+  }
+
+  final owner = context.repo.owner;
+  final repo = context.repo.repo;
+
+  if (!await checkUserPermission(
+    owner: owner,
+    repo: repo,
+    username: commentUser,
+  )) {
+    info('The comment user $commentUser has no write permission, skip.');
+    return;
+  }
+
   await checkInput();
 
   final body = context.payload['comment']['body'];
