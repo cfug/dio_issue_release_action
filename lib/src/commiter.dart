@@ -19,16 +19,11 @@ class PkgCommiter {
     final newVersion = pkg.version;
     // 1. change pubspec.yaml
     final file = File('${pkg.subPath}/pubspec.yaml');
-    final lines = file.readAsLinesSync();
-    final newLines = <String>[];
-    for (final line in lines) {
-      if (line.startsWith('version:')) {
-        newLines.add('version: $newVersion');
-      } else {
-        newLines.add(line);
-      }
-    }
-    file.writeAsStringSync(newLines.join('\n'));
+    final newContent = updatePubspec(
+      file.readAsStringSync(),
+      newVersion,
+    );
+    file.writeAsStringSync(newContent);
 
     // 2. change CHANGELOG.md
     final changelogFile = File('${pkg.subPath}/CHANGELOG.md');
@@ -62,7 +57,7 @@ class PkgCommiter {
 
     final result = execCmdResultSync(cmd);
     if (result.exitCode != 0) {
-      print(result.stderr);
+      error(result.stderr);
       setFailed('set git commiter failed');
     }
   }
@@ -73,7 +68,7 @@ class PkgCommiter {
     );
 
     if (result.exitCode != 0) {
-      print(result.stderr);
+      error(result.stderr);
       setFailed('gh login failed');
     }
 
@@ -82,7 +77,7 @@ class PkgCommiter {
     );
 
     if (setupResult.exitCode != 0) {
-      print(setupResult.stderr);
+      error(setupResult.stderr);
       setFailed('gh setup-git failed');
     }
   }
@@ -92,7 +87,7 @@ class PkgCommiter {
     final cmd = 'git add . && git commit -m "$commitMsg"';
     final result = execCmdResultSync(cmd);
     if (result.exitCode != 0) {
-      print(result.stderr);
+      error(result.stderr);
       setFailed('git commit failed');
     }
   }
@@ -102,7 +97,7 @@ class PkgCommiter {
 
     final result = execCmdResultSync('git push origin main');
     if (result.exitCode != 0) {
-      print(result.stderr);
+      error(result.stderr);
       setFailed('git push failed');
     }
   }
@@ -125,7 +120,7 @@ class PkgCommiter {
     );
 
     if (result.hasErrors) {
-      print(result.errors);
+      error(result.errors);
       setFailed('create release failed');
     }
 

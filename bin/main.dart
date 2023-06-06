@@ -54,7 +54,7 @@ Future<void> main(List<String> arguments) async {
 
 Future<void> injectInput() async {
   // check input
-  final githubTokenInput = Platform.environment['GITHUB_TOKEN'];
+  final githubTokenInput = Platform.environment['PERSON_TOKEN'];
 
   if (githubTokenInput == null) {
     warning('The input GITHUB_TOKEN is null, skip.');
@@ -72,6 +72,9 @@ Future<void> injectInput() async {
 
   // write pub token to file
   writePubTokenToFile(pubToken);
+
+  doPublish = Platform.environment['DO_PUBLISH']?.toLowerCase() == 'true';
+  doRelease = Platform.environment['DO_RELEASE']?.toLowerCase() == 'true';
 }
 
 FutureOr<void> handleIssueComment(String body) async {
@@ -86,6 +89,9 @@ FutureOr<void> handleIssueComment(String body) async {
   }
 }
 
+bool doPublish = true;
+bool doRelease = true;
+
 FutureOr<void> handlePackage(Pkg pkg) async {
   final PkgCommiter pkgCommiter = PkgCommiter(pkg);
 
@@ -93,8 +99,12 @@ FutureOr<void> handlePackage(Pkg pkg) async {
   pkgCommiter.commit();
 
   await publishPkg(pkg, dryRun: true);
-  await publishPkg(pkg, dryRun: false);
+  if (doPublish) {
+    await publishPkg(pkg, dryRun: false);
+  }
 
-  pkgCommiter.push();
-  await pkgCommiter.release();
+  if (doRelease) {
+    pkgCommiter.push();
+    await pkgCommiter.release();
+  }
 }
