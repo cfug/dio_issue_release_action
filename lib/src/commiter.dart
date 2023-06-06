@@ -82,7 +82,7 @@ class PkgCommiter {
     }
   }
 
-  Future<void> commit() async {
+  void commit() {
     setCommiter();
     final cmd = 'git add . && git commit -m "$commitMsg"';
     final result = execCmdResultSync(cmd);
@@ -92,7 +92,7 @@ class PkgCommiter {
     }
   }
 
-  Future<void> push() async {
+  void push() {
     injectGh();
 
     final result = execCmdResultSync('git push origin main');
@@ -106,12 +106,26 @@ class PkgCommiter {
     final tagName = '${pkg.name}_v${pkg.version}';
     final releaseName = '${pkg.name} ${pkg.version}';
 
+    // 1. Query release name exists in github
+    final haveRelease = await releaseExists(
+      owner: context.repo.owner,
+      repo: context.repo.repo,
+      releaseName: releaseName,
+    );
+
+    if (haveRelease) {
+      info('Release $releaseName exists, skip release.');
+      return;
+    }
+
+    // 2. Create github release
+
     final body = '''
   ## What's new
   $currentVersionChangeLog
 ''';
 
-    final result = await releasePkg(
+    final result = await createRelease(
       owner: context.repo.owner,
       repo: context.repo.repo,
       tag: tagName,

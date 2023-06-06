@@ -99,12 +99,17 @@ FutureOr<void> handlePackage(Pkg pkg) async {
   pkgCommiter.commit();
 
   await publishPkg(pkg, dryRun: true);
-  if (doPublish) {
-    await publishPkg(pkg, dryRun: false);
-  }
 
   if (doRelease) {
     pkgCommiter.push();
     await pkgCommiter.release();
+  } else {
+    info('Because the input DO_RELEASE is false, skip release.');
+  }
+
+  if (doPublish) {
+    await publishPkg(pkg, dryRun: false);
+  } else {
+    info('Because the input DO_PUBLISH is false, skip publish.');
   }
 }

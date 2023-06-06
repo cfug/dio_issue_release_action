@@ -34,6 +34,14 @@ void main() {
       convertPkgList('dio: v1.0.0   \ncookie_manager     : v1.0.0').length,
       2,
     );
+
+    // Test other version
+    expect(convertPkgList('dio: 1.0.0+1').length, 1);
+    expect(convertPkgList('dio: 1.0').length, 0);
+    expect(convertPkgList('dio: 1.3.0+build.1').length, 1);
+    expect(convertPkgList('dio: 1.3.0+1').length, 1);
+    expect(convertPkgList('dio: 1.3.0-dev.1').length, 1);
+    expect(convertPkgList('dio: 1.3.0+dev.1').length, 1);
   });
 
   group('Test permission:', () {
