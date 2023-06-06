@@ -9,6 +9,14 @@ inputs:
   pub-credentials-json:
     description: "The pub credentials json"
     required: true
+  do-publish:
+    description: "Whether to publish the package to pub.dev"
+    required: false
+    default: 'true'
+  do-release:
+    description: "Whether to release the package to GitHub"
+    required: false
+    default: 'true'
 
 runs:
   using: composite
@@ -31,5 +39,7 @@ runs:
       run: dart run "${{ github.action_path }}/bin/main.dart"
       shell: bash
       env:
-        GITHUB_TOKEN: ${{ inputs.github-token }}
+        PERSON_TOKEN: ${{ inputs.github-token }}
         PUB_CREDENTIALS_JSON: ${{ inputs.pub-credentials-json }}
+        DO_PUBLISH: ${{ inputs.do-publish }}
+        DO_RELEASE: ${{ inputs.do-release }}
