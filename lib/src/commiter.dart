@@ -57,7 +57,7 @@ class PkgCommiter {
 
     final result = execCmdResultSync(cmd);
     if (result.exitCode != 0) {
-      print(result.stderr);
+      error(result.stderr);
       setFailed('set git commiter failed');
     }
   }
@@ -68,7 +68,7 @@ class PkgCommiter {
     );
 
     if (result.exitCode != 0) {
-      print(result.stderr);
+      error(result.stderr);
       setFailed('gh login failed');
     }
 
@@ -77,7 +77,7 @@ class PkgCommiter {
     );
 
     if (setupResult.exitCode != 0) {
-      print(setupResult.stderr);
+      error(setupResult.stderr);
       setFailed('gh setup-git failed');
     }
   }
@@ -87,7 +87,7 @@ class PkgCommiter {
     final cmd = 'git add . && git commit -m "$commitMsg"';
     final result = execCmdResultSync(cmd);
     if (result.exitCode != 0) {
-      print(result.stderr);
+      error(result.stderr);
       setFailed('git commit failed');
     }
   }
@@ -97,7 +97,7 @@ class PkgCommiter {
 
     final result = execCmdResultSync('git push origin main');
     if (result.exitCode != 0) {
-      print(result.stderr);
+      error(result.stderr);
       setFailed('git push failed');
     }
   }
@@ -120,7 +120,7 @@ class PkgCommiter {
     );
 
     if (result.hasErrors) {
-      print(result.errors);
+      error(result.errors);
       setFailed('create release failed');
     }
 
