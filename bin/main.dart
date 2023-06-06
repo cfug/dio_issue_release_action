@@ -54,7 +54,7 @@ Future<void> main(List<String> arguments) async {
 
 Future<void> injectInput() async {
   // check input
-  final githubTokenInput = Platform.environment['GITHUB_TOKEN'];
+  final githubTokenInput = Platform.environment['PERSON_TOKEN'];
 
   if (githubTokenInput == null) {
     warning('The input GITHUB_TOKEN is null, skip.');

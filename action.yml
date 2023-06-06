@@ -31,5 +31,5 @@ runs:
       run: dart run "${{ github.action_path }}/bin/main.dart"
       shell: bash
       env:
-        GITHUB_TOKEN: ${{ inputs.github-token }}
+        PERSON_TOKEN: ${{ inputs.github-token }}
         PUB_CREDENTIALS_JSON: ${{ inputs.pub-credentials-json }}
