@@ -92,8 +92,8 @@ FutureOr<void> handlePackage(Pkg pkg) async {
   pkgCommiter.changeFile();
   pkgCommiter.commit();
 
-  await publishPkg(pkg, dryRun: true);
-  await publishPkg(pkg, dryRun: false);
+  // await publishPkg(pkg, dryRun: true);
+  // await publishPkg(pkg, dryRun: false);
 
   pkgCommiter.push();
   await pkgCommiter.release();
