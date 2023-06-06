@@ -27,6 +27,8 @@ jobs:
 | -------------------- | ------------------------------------------------------------------------------------ |
 | github-token         | 用于在项目中调取 github api 来检查权限等操作                                         |
 | pub-credentials-json | 用于执行 pub publish 的一些操作，需要在 github 项目的 secrets 中设置                 |
+| do-publish | 是否执行 publish to pub.dev                  |
+| do-release | 是否执行 git push && create github release                  |
 
 ## 权限
 

@@ -72,6 +72,9 @@ Future<void> injectInput() async {
 
   // write pub token to file
   writePubTokenToFile(pubToken);
+
+  doPublish = Platform.environment['DO_PUBLISH']?.toLowerCase() == 'true';
+  doRelease = Platform.environment['DO_RELEASE']?.toLowerCase() == 'true';
 }
 
 FutureOr<void> handleIssueComment(String body) async {
@@ -86,15 +89,22 @@ FutureOr<void> handleIssueComment(String body) async {
   }
 }
 
+bool doPublish = true;
+bool doRelease = true;
+
 FutureOr<void> handlePackage(Pkg pkg) async {
   final PkgCommiter pkgCommiter = PkgCommiter(pkg);
 
   pkgCommiter.changeFile();
   pkgCommiter.commit();
 
-  // await publishPkg(pkg, dryRun: true);
-  // await publishPkg(pkg, dryRun: false);
+  await publishPkg(pkg, dryRun: true);
+  if (doPublish) {
+    await publishPkg(pkg, dryRun: false);
+  }
 
-  pkgCommiter.push();
-  await pkgCommiter.release();
+  if (doRelease) {
+    pkgCommiter.push();
+    await pkgCommiter.release();
+  }
 }
