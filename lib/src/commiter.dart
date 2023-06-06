@@ -19,16 +19,11 @@ class PkgCommiter {
     final newVersion = pkg.version;
     // 1. change pubspec.yaml
     final file = File('${pkg.subPath}/pubspec.yaml');
-    final lines = file.readAsLinesSync();
-    final newLines = <String>[];
-    for (final line in lines) {
-      if (line.startsWith('version:')) {
-        newLines.add('version: $newVersion');
-      } else {
-        newLines.add(line);
-      }
-    }
-    file.writeAsStringSync(newLines.join('\n'));
+    final newContent = updatePubspec(
+      file.readAsStringSync(),
+      newVersion,
+    );
+    file.writeAsStringSync(newContent);
 
     // 2. change CHANGELOG.md
     final changelogFile = File('${pkg.subPath}/CHANGELOG.md');

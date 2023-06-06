@@ -63,7 +63,7 @@ void main() {
       );
     });
 
-     test('not have permission', () async {
+    test('not have permission', () async {
       expect(
         await checkUserPermission(
           owner: 'flutter',
@@ -91,11 +91,20 @@ void main() {
       expect(getCurrentVersionContent(dst, 'Unreleased'), '*None.*');
     });
 
-    test('Change pubspec.yaml', () {
-      final src = File('test/files/src.yml').readAsStringSync();
-      final dst = File('test/files/dst.yml').readAsStringSync();
+    group('Test change pubspec.yaml', () {
+      test('not have last empty line', () {
+        final src = File('test/files/src.yml').readAsStringSync();
+        final dst = File('test/files/dst.yml').readAsStringSync();
 
-      expect(updatePubspec(src, '5.0.1'), dst);
+        expect(updatePubspec(src, '5.0.1'), dst);
+      });
+
+      test('have last empty line', () {
+        final src = File('test/files/src2.yml').readAsStringSync();
+        final dst = File('test/files/dst2.yml').readAsStringSync();
+
+        expect(updatePubspec(src, '1.0.0'), dst);
+      });
     });
   });
 }
