@@ -7,6 +7,7 @@ String execCmdSync(
   String? workingPath,
 }) {
   workingPath ??= Directory.current.path;
+  info('Run [[ $cmd  ]] in $workingPath');
   final result = Process.runSync(
     'bash',
     ['-c', cmd],
@@ -21,7 +22,7 @@ ProcessResult execCmdResultSync(
   String? workingPath,
 }) {
   workingPath ??= Directory.current.path;
-  info('Run $cmd in $workingPath');
+  info('Run [[ $cmd  ]] in $workingPath');
   return Process.runSync(
     'bash',
     ['-c', cmd],
