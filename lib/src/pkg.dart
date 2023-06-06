@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:pub_semver/pub_semver.dart';
 import 'package:yaml/yaml.dart' as yaml;
 
 import 'package:github_action_core/github_action_core.dart';
@@ -48,7 +49,7 @@ class Pkg {
       throw ArgumentError.value(text, 'text', 'Invalid format.');
     }
     final name = parts[0].trim();
-    final version = parts[1].trim();
+    var version = parts[1].trim();
 
     if (name.trim().isEmpty) {
       throw ArgumentError.value(text, 'text', 'The name is empty.');
@@ -58,9 +59,14 @@ class Pkg {
       throw ArgumentError.value(text, 'text', 'The version is empty.');
     }
 
-    // Version is a x.y.z or vx.y.z
-    final versionRegex = RegExp(r'^v?\d+\.\d+\.\d+$');
-    if (!versionRegex.hasMatch(version)) {
+    try {
+      if (version.startsWith('v')) {
+        version = version.substring(1);
+        Version.parse(version);
+      } else {
+        Version.parse(version);
+      }
+    } on FormatException {
       throw ArgumentError.value(text, 'text', 'The version is invalid.');
     }
 

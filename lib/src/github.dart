@@ -31,7 +31,7 @@ Future<bool> checkUserPermission({
   }
 }
 
-Future<Release> releasePkg({
+Future<Release> createRelease({
   required String owner,
   required String repo,
   required String tag,
@@ -39,8 +39,8 @@ Future<Release> releasePkg({
   required String body,
 }) {
   final createRelease = CreateRelease.from(
-    tagName: tag,
     name: name,
+    tagName: tag,
     targetCommitish: 'main',
     isDraft: false,
     isPrerelease: false,
@@ -51,4 +51,17 @@ Future<Release> releasePkg({
     RepositorySlug(owner, repo),
     createRelease,
   );
+}
+
+Future<bool> releaseExists({
+  required String owner,
+  required String repo,
+  required String releaseName,
+}) {
+  return github.repositories
+      .listReleases(RepositorySlug(owner, repo))
+      .toList()
+      .then((releases) {
+    return releases.any((release) => release.name == releaseName);
+  });
 }
