@@ -96,7 +96,7 @@ void main() {
       const content = '- Change version';
       expect(getCurrentVersionContent(dst, '5.0.1'), content);
       expect(getCurrentVersionContent(dst, '5.0.0'), 'xxxx');
-      expect(getCurrentVersionContent(dst, 'Unreleased'), '*None.*');
+      expect(getCurrentVersionContent(dst, 'Unreleased'), noneChangeLogText);
     });
 
     group('Test change pubspec.yaml', () {
