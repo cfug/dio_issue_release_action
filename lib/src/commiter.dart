@@ -38,6 +38,13 @@ class PkgCommiter {
       newChangeLog,
       newVersion,
     );
+
+    if (currentVersionChangeLog == noneChangeLogText) {
+      error(
+        'No changelog for version $newVersion, current changelog is $currentVersionChangeLog',
+      );
+      setFailed('No changelog for version $newVersion');
+    }
   }
 
   final commitUser = 'cfug-dev';

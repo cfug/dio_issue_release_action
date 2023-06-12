@@ -1,15 +1,16 @@
+const noneChangeLogText = '*None.*';
+
 String updateChangeLog(String changelog, String newVersion) {
   var changelogLines = changelog.split('\n');
 
   final unreleasedTag = '## Unreleased';
-  final noneText = '*None.*';
 
   final newChangelogLines = <String>[];
   for (final line in changelogLines) {
     if (line.startsWith(unreleasedTag)) {
       newChangelogLines.add(line);
       newChangelogLines.add('');
-      newChangelogLines.add(noneText);
+      newChangelogLines.add(noneChangeLogText);
       newChangelogLines.add('');
       newChangelogLines.add('## $newVersion');
     } else {
