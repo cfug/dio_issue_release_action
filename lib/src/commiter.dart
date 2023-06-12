@@ -39,9 +39,17 @@ class PkgCommiter {
       newVersion,
     );
 
-    if (currentVersionChangeLog == noneChangeLogText) {
+    if (currentVersionChangeLog.toLowerCase() ==
+        noneChangeLogText.toLowerCase()) {
       error(
         'No changelog for version $newVersion, current changelog is $currentVersionChangeLog',
+      );
+      setFailed('No changelog for version $newVersion');
+    }
+
+    if (currentVersionChangeLog.trim().isEmpty) {
+      error(
+        'No changelog for version $newVersion, current changelog is empty',
       );
       setFailed('No changelog for version $newVersion');
     }

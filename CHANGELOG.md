@@ -1,3 +1,7 @@
+## 2.1.2
+
+- Fix: Check empty changelog.
+
 ## 2.1.1
 
 - Fix: throw error when changelog is `*None.*`.
