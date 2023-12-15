@@ -9,6 +9,7 @@ enum PkgInfo {
   cookieManager('cookie_manager', 'plugins/cookie_manager'),
   http2Adapter('http2_adapter', 'plugins/http2_adapter'),
   nativeDioAdapter('native_dio_adapter', 'plugins/native_dio_adapter'),
+  compatibilityLayer('compatibility_layer', 'plugins/compatibility_layer'),
   ;
 
   final String name;

@@ -1,6 +1,6 @@
 name: action_dio_release
 description: For release package to github release page and upload to pub.dev.
-version: 2.1.2
+version: 2.2.0
 repository: https://github.com/cfug/dio_issue_release_action
 publish_to: none
 
