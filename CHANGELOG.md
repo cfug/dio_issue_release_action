@@ -1,3 +1,7 @@
+## 2.2.0
+
+- Feat: new package `compatibility_layer`.
+
 ## 2.1.2
 
 - Fix: Check empty changelog.
