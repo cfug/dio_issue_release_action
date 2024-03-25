@@ -32,8 +32,8 @@ runs:
         flutter --version
       shell: bash
     - uses: bluefireteam/melos-action@v3
-        with:
-          run-bootstrap: false
+      with:
+        run-bootstrap: false
     - name: Check satisfied packages
       run: |
         dart ./scripts/melos_packages.dart
