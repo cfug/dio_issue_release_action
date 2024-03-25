@@ -31,6 +31,15 @@ runs:
         dart --version
         flutter --version
       shell: bash
+    - uses: bluefireteam/melos-action@v3
+        with:
+          run-bootstrap: false
+    - name: Check satisfied packages
+      run: |
+        dart ./scripts/melos_packages.dart
+        echo $(cat .melos_packages) >> $GITHUB_ENV
+    - name: Melos Bootstrap
+      run: melos bootstrap
     - name: Install dependencies
       run: dart pub get
       working-directory: ${{ github.action_path }}
