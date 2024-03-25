@@ -38,5 +38,11 @@ Future<void> publishPkg(
   }
 
   info(result.stdout.toString());
+
+  if (dryRun) {
+    info('Dry run publish ${pkg.name} success.');
+    return;
+  }
+
   info('Publish ${pkg.name} ${pkg.version} success.');
 }

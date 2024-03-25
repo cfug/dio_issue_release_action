@@ -110,6 +110,12 @@ class PkgCommiter {
   void push() {
     injectGh();
 
+    var res = execCmdResultSync('git pull');
+    if (res.exitCode != 0) {
+      error(res.stderr);
+      setFailed('git pull failed');
+    }
+    
     final result = execCmdResultSync('git push origin main');
     if (result.exitCode != 0) {
       error(result.stderr);
