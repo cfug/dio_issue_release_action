@@ -1,3 +1,11 @@
+## 2.3.1
+
+- Fix: action file format.
+
+## 2.3.0
+
+- Include melos in `action.yml`.
+
 ## 2.2.0
 
 - Feat: new package `compatibility_layer`.
