@@ -1,3 +1,7 @@
+## 2.3.2
+
+- Fix: fix action error
+
 ## 2.3.1
 
 - Fix: action file format.
