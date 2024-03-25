@@ -38,8 +38,10 @@ runs:
       run: |
         dart ./scripts/melos_packages.dart
         echo $(cat .melos_packages) >> $GITHUB_ENV
+      shell: bash
     - name: Melos Bootstrap
       run: melos bootstrap
+      shell: bash
     - name: Install dependencies
       run: dart pub get
       working-directory: ${{ github.action_path }}
