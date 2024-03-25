@@ -1,3 +1,7 @@
+## 2.3.3
+
+- Fix: add `dart pub get` before melos scripts.
+
 ## 2.3.2
 
 - Fix: fix action error
