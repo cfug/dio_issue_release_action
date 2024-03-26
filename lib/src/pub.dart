@@ -34,13 +34,16 @@ Future<void> publishPkg(
 
   if (result.exitCode != 0) {
     error(result.stderr.toString());
-    setFailed('publish failed');
+    final failMsg = dryRun
+        ? 'Dry run publish ${pkg.name} ${pkg.version} failed.'
+        : 'Publish ${pkg.name} ${pkg.version} failed.';
+    setFailed(failMsg);
   }
 
   info(result.stdout.toString());
 
   if (dryRun) {
-    info('Dry run publish ${pkg.name} success.');
+    info('Dry run publish ${pkg.name} ${pkg.version} success.');
     return;
   }
 
