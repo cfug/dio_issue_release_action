@@ -1,3 +1,7 @@
+## 2.3.4
+
+- Build: Change publish log.
+
 ## 2.3.3
 
 - Fix: add `dart pub get` before melos scripts.
