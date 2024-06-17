@@ -1,3 +1,7 @@
+## 2.4.0
+
+- Add new package `web_adapter`.
+
 ## 2.3.4
 
 - Build: Change publish log.
