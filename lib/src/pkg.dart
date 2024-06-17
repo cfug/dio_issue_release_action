@@ -10,6 +10,7 @@ enum PkgInfo {
   http2Adapter('http2_adapter', 'plugins/http2_adapter'),
   nativeDioAdapter('native_dio_adapter', 'plugins/native_dio_adapter'),
   compatibilityLayer('compatibility_layer', 'plugins/compatibility_layer'),
+  webAdapter('web_adapter', 'plugins/web_adapter'),
   ;
 
   final String name;
