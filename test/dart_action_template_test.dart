@@ -42,6 +42,24 @@ void main() {
     expect(convertPkgList('dio: 1.3.0+1').length, 1);
     expect(convertPkgList('dio: 1.3.0-dev.1').length, 1);
     expect(convertPkgList('dio: 1.3.0+dev.1').length, 1);
+
+    // Test all support package
+    final names = [
+      'dio',
+      'cookie_manager',
+      'http2_adapter',
+      'native_dio_adapter',
+      'compatibility_layer',
+      'web_adapter'
+    ];
+
+    for (final name in names) {
+      expect(
+        convertPkgList('$name: 1.0.0').length,
+        1,
+        reason: 'Test $name',
+      );
+    }
   });
 
   group('Test permission:', () {
