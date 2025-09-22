@@ -34,6 +34,7 @@ runs:
     - uses: bluefireteam/melos-action@v3
       with:
         run-bootstrap: false
+        melos-version: '^6.0.0'
     - name: Install dependencies
       run: dart pub get
       shell: bash
